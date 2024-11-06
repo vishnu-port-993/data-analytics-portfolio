@@ -30,13 +30,13 @@ By comparing Fitbit user data against NHIS survey data and WHO guidelines, we ca
 # 2. Prepare Phase
 ## **Data Sources**:
 To address the business problem, we’ve selected two primary data sources that together offer both user-specific insights and population-level benchmarks:
-1.	**Fitbit Data (03.12.2016 - 05.12.2016)**:
+### 1.	**Fitbit Data (03.12.2016 - 05.12.2016)**:
 This dataset includes detailed activity and health metrics for users who consented to share their data. The dataset includes:
 •	**Daily Activity**: Total steps, distance, and time spent in different activity levels (sedentary, lightly active, fairly active, and very active).
 •	**Sleep Metrics**: Sleep duration, time in bed, and various stages of sleep, providing insights into users’ sleep patterns.
 • **Heart Rate Data**: Detailed heart rate information that helps understand users' cardiovascular health.
 
-## ROCCC Check:
+#### ROCCC Check:
 •	**Reliable**: This data is sourced from Kaggle, a reputable platform for dataset sharing, but it includes a small sample of 30 users, which may not fully represent the broader population.
 •	**Original**: The dataset is original, and submitted with user consent, ensuring authenticity.
 •	**Comprehensive**: Although it offers minute-level tracking of activity, heart rate, and sleep, the small sample size limits its comprehensiveness in representing diverse demographics or activity levels.
@@ -45,13 +45,13 @@ This dataset includes detailed activity and health metrics for users who consent
   - Owners: Furberg, R., Brinton, J., Keating, M., & Ortiz, A. (2016). Crowd-sourced Fitbit datasets 03.12.2016-05.12.2016 [Data set]. Zenodo. https://doi.org/10.5281/zenodo.53894
   - Privacy considerations are detailed in Furberg et al. (2017) [https://link.springer.com/article/10.1007/s00779-017-1068-3].
 
-2.	**CDC’s 2016 National Health Interview Survey (NHIS)**:
+### 2.	**CDC’s 2016 National Health Interview Survey (NHIS)**:
 This dataset provides national health data for the U.S. adult population, collected and standardized by the CDC. The NHIS dataset includes:
 •	**Physical Activity**: Self-reported duration of moderate and vigorous activity, as well as indicators of whether individuals meet aerobic and strength guidelines.
 •	**Sleep Patterns**: Data on average sleep duration, quality, and issues related to sleep consistency and restfulness.
 •	**Wellness and Health Recommendations Compliance**: Information on whether individuals meet recommended health guidelines for physical activity and sleep, serving as a benchmark for analyzing Fitbit users' data.
 
-## ROCCC Check:
+#### ROCCC Check:
 •	**Reliable**: This data is sourced from the CDC’s National Center for Health Statistics (NCHS), a well-established and reliable source of public health data in the United States. The NHIS is conducted annually, following stringent data collection and validation protocols to ensure accuracy.
 •	**Original**: The dataset is an original and direct collection of health data gathered from U.S. residents by the NCHS. It is released for statistical and analytical use only, with de-identified information to protect participant privacy.
 •	**Comprehensive**: The NHIS 2016 survey provides extensive health information across a large, nationally representative sample. It includes variables on physical activity, sleep, health conditions, and other demographic factors, making it comprehensive for public health analysis. However, as survey data, it relies on self-reported information, which may introduce response biases.
@@ -60,7 +60,7 @@ This dataset provides national health data for the U.S. adult population, collec
 CDC/NCHS (2016). National Health Interview Survey, 2016 [Public Use Data Release]. National Center for Health Statistics. Available from: https://www.cdc.gov/nchs/nhis/nhis_2016_data_release.htm
   - **Data Disclaimer**: This project uses data from the 2016 National Health Interview Survey (NHIS), which is made available by the National Center for Health Statistics (NCHS) for statistical reporting and analysis only. All analyses are conducted in compliance with the data use restrictions provided by NCHS, with no attempt to identify individuals or link data to any identifiable information.
 
-3.	**WHO Health Guidelines**:
+### 3.	**WHO Health Guidelines**:
 We incorporate WHO’s recommendations for sleep, physical activity, and heart health as baseline standards. These recommendations help contextualize the analysis by providing universal benchmarks for healthy behaviour.
 
 
