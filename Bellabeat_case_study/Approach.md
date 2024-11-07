@@ -440,3 +440,37 @@ GROUP BY
     Id, ActivityDate
 HAVING COUNT(*) > 1;
 ```
+2.	**Remove Duplicates**: For cases where duplicates existed, I retained the record with the higher calorie count as it likely reflects a more complete activity log.
+```sql
+DELETE t1
+FROM daily_activity t1
+INNER JOIN daily_activity t2 
+ON t1.Id = t2.Id 
+AND t1.ActivityDate = t2.ActivityDate
+WHERE t1.TotalSteps = 0
+   OR t1.Calories < t2.Calories;
+```
+3.	**Data Integrity Checks**: I conducted a series of checks to ensure data integrity, including verifying the earliest and latest dates, total records, and unique users, and generating basic descriptive statistics.
+```sql
+SELECT 
+    MIN(ActivityDate) AS earliest_date,
+    MAX(ActivityDate) AS latest_date,
+    COUNT(*) AS total_records,
+    COUNT(DISTINCT Id) AS unique_users
+FROM daily_activity;
+```
+```sql
++------------+--------------+------------+---------------+-----------------+--------------------------+--------------------+--------------------------+---------------------+-------------------------+-------------------+---------------------+----------------------+------------------+----------+
+| Id         | ActivityDate | TotalSteps | TotalDistance | TrackerDistance | LoggedActivitiesDistance | VeryActiveDistance | ModeratelyActiveDistance | LightActiveDistance | SedentaryActiveDistance | VeryActiveMinutes | FairlyActiveMinutes | LightlyActiveMinutes | SedentaryMinutes | Calories |
++------------+--------------+------------+---------------+-----------------+--------------------------+--------------------+--------------------------+---------------------+-------------------------+-------------------+---------------------+----------------------+------------------+----------+
+| 6775888955 | 2016-04-01   |       7225 |          5.18 |            5.18 |                        0 |               1.73 |                     1.27 |                2.18 |                       0 |                25 |                  50 |                  163 |             1189 |     3065 |
+| 4020332650 | 2016-03-22   |       6662 |          4.78 |            4.78 |                        0 |                  0 |                        0 |                   0 |                       0 |                 0 |                   0 |                    0 |             1440 |     3162 |
+| 4558609924 | 2016-04-08   |       4195 |          2.77 |            2.77 |                        0 |                  0 |                        0 |                2.77 |                       0 |                 0 |                   0 |                  241 |             1199 |     1778 |
+| 8792009665 | 2016-04-21   |        144 |          0.09 |            0.09 |                        0 |                  0 |                        0 |                0.09 |                       0 |                 0 |                   0 |                    9 |             1431 |     1720 |
+| 1927972279 | 2016-04-02   |       5662 |          3.92 |            3.92 |                        0 |                  0 |                        0 |                3.92 |                       0 |                 0 |                   0 |                  267 |              858 |     2783 |
+| 3372868164 | 2016-04-24   |       6731 |          4.59 |            4.59 |                        0 |               0.89 |                     0.19 |                3.49 |                    0.02 |                14 |                   7 |                  292 |             1127 |     1921 |
+| 2873212765 | 2016-04-21   |       8859 |          5.98 |            5.98 |                        0 |               0.13 |                     0.37 |                5.47 |                    0.01 |                 2 |                  10 |                  371 |             1057 |     1970 |
+| 6117666160 | 2016-04-28   |       3403 |           2.6 |             2.6 |                        0 |                  0 |                        0 |                 2.6 |                       0 |                 0 |                   0 |                  141 |              758 |     1879 |
+| 4319703577 | 2016-04-28   |      10817 |          7.28 |            7.28 |                        0 |               1.01 |                     0.33 |                5.94 |                       0 |                13 |                   8 |                  359 |              552 |     2367 |
+| 6962181067 | 2016-05-11   |       6722 |          4.44 |            4.44 |                        0 |               1.49 |                     0.31 |                2.65 |                       0 |                24 |                   7 |                  199 |              709 |     1855 |
++------------+--------------+------------+---------------+-----------------+--------------------------+--------------------+--------------------------+---------------------+-------------------------+-------------------+---------------------+----------------------+------------------+----------+```
