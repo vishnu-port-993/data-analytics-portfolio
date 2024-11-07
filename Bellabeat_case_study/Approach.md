@@ -67,3 +67,21 @@ This dataset provides national health data for the U.S. adult population, collec
 1. **Sample-Specific Data in Fitbit**: The Fitbit data reflects only users who consented to share their data and may not represent the general population. However, by comparing it to NHIS data, we can gain perspective on where Fitbit users align with or diverge from broader health norms.
 2. **Self-Reported Data in NHIS**: NHIS relies on self-reported data, which may introduce some reporting bias. We mitigate this by using NHIS data primarily as a benchmark rather than a direct comparison.
 3. **NHIS Data Filtering**: The NHIS dataset was extensive and initially included variables beyond the scope of this analysis. To streamline it, we filtered the data to retain only fields relevant to physical activity, sleep, and compliance with health guidelines. This filtering process resulted in a more targeted dataset, stored as *"nhis_2016_data_cleaned.csv"*
+
+
+# 2. Process Phase: Data Validation, Cleaning, and Preparation
+The PROCESS phase in this project involved validating, cleaning, and structuring the selected datasets to ensure accurate, high-quality analysis. This phase is critical because clean, validated data forms the foundation of reliable insights and sound decision-making. Given the scope of this capstone project, the process phase is conducted with careful attention to Data Validation, Data Cleaning and Data Transformation.
+
+## Data Cleaning Overview:
+To ensure data integrity and quality, each table was subjected to the following cleaning procedures:
+1.	**Duplicate Identification**: Records with identical ID and date/timestamp entries were reviewed to ensure data uniqueness per user and time period.
+2.	**Trimming Spaces**: All text columns were trimmed to remove leading or trailing spaces.
+3.	**Missing or Null Values Check**: Null or missing values were addressed or removed, particularly in key columns.
+4.	**Date Format Standardization**: Dates were standardized across tables to ensure consistency.
+5.	**Validation of Numeric Columns**: Each numeric column was verified to contain only valid numbers.
+6.	**Date Range Verification**: Dates in each table were checked to confirm they fall within the project’s specified timeframe (March 12 to May 12, 2016).
+7.	**Null Values in Key Columns**: Essential columns were checked for null values, and missing entries were handled as needed.
+8.	**Descriptive Statistics Review**: Basic statistics were calculated for numeric columns to identify any anomalies or data inconsistencies.
+9.	**Overall Data Integrity Check**: A general check was conducted to ensure logical coherence across values.
+
+
