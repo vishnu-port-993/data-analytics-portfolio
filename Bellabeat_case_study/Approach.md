@@ -1662,7 +1662,7 @@ In the Share phase of our **Bellabeat** case study, we focused on visualizing ke
 
 In the Share Phase, we used R to create visualizations that highlight key insights from the Bellabeat data. The visualizations include analyses of user activity, sleep patterns, and heart rate trends. These visualizations help to clearly communicate the findings and recommendations derived from the data.
 
-For the complete R code used in the analysis and to view all visualizations, please refer to the [Bellabeat_Viz.Rmd file](./Bellabeat_Viz.Rmd).
+For the complete R code used in the analysis and to view all visualizations, please refer to the [Bellabeat_Viz.Rmd file](./Bellabeat-Viz.html).
 
 ### Key Visualizations and Insights:
 1. **Average Daily Steps per User**: A bar chart illustrating average daily steps per user, which helped identify general activity levels.
