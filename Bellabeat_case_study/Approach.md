@@ -1653,3 +1653,7 @@ In addition to **NHIS** benchmarks, **WHO** recommendations were incorporated as
 - Sleep duration was often significantly higher than the NHIS benchmark, with some users exceeding recommended weekly sleep by a wide margin. This could reflect sedentary behavior rather than restorative sleep patterns, so further analysis may be necessary to differentiate quality sleep from merely spending time in bed.
 - Some users fell below the recommended sleep levels, suggesting the need for sleep tracking and health prompts to improve rest.
 
+# 1. SHARE PHASE - Visualizing and Analyzing Key Metrics
+In the Share phase of our **Bellabeat** case study, we focused on visualizing key health metrics derived from the **Fitbit** dataset. These visualizations provide insights into users' activity levels, sleep patterns, and heart rate trends, which are crucial for understanding user behavior and informing product development strategies. Below is a detailed analysis of the four key visualizations created during this phase.
+
+```r
