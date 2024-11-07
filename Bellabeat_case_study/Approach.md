@@ -722,3 +722,106 @@ FROM minute_sleep;
 | 6962181067 |     1 | 11321297696 | 2016-04-06 | 01:08:00  |
 +------------+-------+-------------+------------+-----------+
 ```
+
+## 2.6 Processing and cleaning `minute_sleep` table:
+### 2.6.1 Key SQL queries used for cleaning:
+1.	**Duplicate Records Check**: Verified that there were no duplicate records in the table.
+```sql
+SELECT SEX, AGE_P, SRVY_YR, INTV_MON, DBHVPAY, DBHVCLY, DBHVPAN, DBHVCLN,
+       VIGNO, VIGTP, VIGFREQW, VIGLNGNO, VIGLNGTP, VIGMIN,
+       MODNO, MODTP, MODFREQW, MODLNGNO, MODLNGTP, MODMIN,
+       STRNGNO, STRNGTP, STRFREQW, ASISLEEP, ASISLPFL, ASISLPST, ASISLPMD, ASIREST,
+       COUNT(*) AS count
+FROM nhis_2016_data
+GROUP BY SEX, AGE_P, SRVY_YR, INTV_MON, DBHVPAY, DBHVCLY, DBHVPAN, DBHVCLN,
+         VIGNO, VIGTP, VIGFREQW, VIGLNGNO, VIGLNGTP, VIGMIN,
+         MODNO, MODTP, MODFREQW, MODLNGNO, MODLNGTP, MODMIN,
+         STRNGNO, STRNGTP, STRFREQW, ASISLEEP, ASISLPFL, ASISLPST, ASISLPMD, ASIREST
+HAVING COUNT(*) > 1;
+```
+2.	**Missing Values Check**: Ensured that all columns had non-null values, verifying completeness.
+```sql
+SELECT 
+    COUNT(*) AS total_rows,
+    COUNT(SEX) AS non_null_sex,
+    COUNT(AGE_P) AS non_null_age,
+    COUNT(SRVY_YR) AS non_null_survey_year,
+    COUNT(INTV_MON) AS non_null_interview_month,
+    COUNT(DBHVPAY) AS non_null_dbhvpay,
+    COUNT(DBHVCLY) AS non_null_dbhvcly,
+    COUNT(DBHVPAN) AS non_null_dbhvpan,
+    COUNT(DBHVCLN) AS non_null_dbhvcln,
+    COUNT(VIGNO) AS non_null_vigno,
+    COUNT(VIGTP) AS non_null_vigtp,
+    COUNT(VIGFREQW) AS non_null_vigfreqw,
+    COUNT(VIGLNGNO) AS non_null_viglngno,
+    COUNT(VIGLNGTP) AS non_null_viglngtp,
+    COUNT(VIGMIN) AS non_null_vigmin,
+    COUNT(MODNO) AS non_null_modno,
+    COUNT(MODTP) AS non_null_modtp,
+    COUNT(MODFREQW) AS non_null_modfreqw,
+    COUNT(MODLNGNO) AS non_null_modlngno,
+    COUNT(MODLNGTP) AS non_null_modlngtp,
+    COUNT(MODMIN) AS non_null_modmin,
+    COUNT(STRNGNO) AS non_null_strngno,
+    COUNT(STRNGTP) AS non_null_strngtp,
+    COUNT(STRFREQW) AS non_null_strfreqw,
+    COUNT(ASISLEEP) AS non_null_asisleep,
+    COUNT(ASISLPFL) AS non_null_asislpfl,
+    COUNT(ASISLPST) AS non_null_asislpst,
+    COUNT(ASISLPMD) AS non_null_asislpmd,
+    COUNT(ASIREST) AS non_null_asirest
+FROM nhis_2016_data;
+```
+3.	**Range Validation**: Checked that each column’s values fell within the expected ranges based on NHIS variable definitions mentioned on the dataset manual:
+**Expected Ranges**:
+- `AGE_P`: 18 to 85
+- `DBHVPAY`, `DBHVCLY`, `DBHVPAN`, `DBHVCLN`: 1 (Yes) or 2 (No)
+- `VIGNO`, `MODNO`, `STRNGNO`: 0 (never) or 1-995 (frequency counts)
+- `VIGTP`, `MODTP`, `STRNGTP`: 0 (never) or 1 (per day), 2 (per week), 3 (per month), 4 (per year)
+- `VIGLNGNO`, `MODLNGNO`: 1 to 995
+- `VIGLNGTP`, `MODLNGTP`: 1 (minutes) or 2 (hours)
+- `VIGFREQW`, `MODFREQW`, `STRFREQW`: 0 (less than once per week) to 28 (times per week), or 95 (never)
+- `VIGMIN`, `MODMIN`: 10 to 720 (minutes)
+- `ASISLEEP`: 1 to 24 (hours)
+- `ASISLPFL`, `ASISLPST`: 0 (no issues) to 7 (7 or more times)
+- `ASISLPMD`: 0 (no medication) to 7 (7 or more times)
+- `ASIREST`: 0 (never rested) to 7 (days felt rested)
+
+```sql
+SELECT
+    MIN(AGE_P) AS min_age, MAX(AGE_P) AS max_age,
+    MIN(DBHVPAY) AS min_dbhvpay, MAX(DBHVPAY) AS max_dbhvpay,
+    MIN(DBHVCLY) AS min_dbhvcly, MAX(DBHVCLY) AS max_dbhvcly,
+    MIN(DBHVPAN) AS min_dbhvpan, MAX(DBHVPAN) AS max_dbhvpan,
+    MIN(DBHVCLN) AS min_dbhvcln, MAX(DBHVCLN) AS max_dbhvcln,
+    MIN(VIGNO) AS min_vigno, MAX(VIGNO) AS max_vigno,
+    MIN(VIGTP) AS min_vigtp, MAX(VIGTP) AS max_vigtp,
+    MIN(VIGFREQW) AS min_vigfreqw, MAX(VIGFREQW) AS max_vigfreqw,
+    MIN(VIGLNGNO) AS min_viglngno, MAX(VIGLNGNO) AS max_viglngno,
+    MIN(VIGLNGTP) AS min_viglngtp, MAX(VIGLNGTP) AS max_viglngtp,
+    MIN(VIGMIN) AS min_vigmin, MAX(VIGMIN) AS max_vigmin,
+    MIN(MODNO) AS min_modno, MAX(MODNO) AS max_modno,
+    MIN(MODTP) AS min_modtp, MAX(MODTP) AS max_modtp,
+    MIN(MODFREQW) AS min_modfreqw, MAX(MODFREQW) AS max_modfreqw,
+    MIN(MODLNGNO) AS min_modlngno, MAX(MODLNGNO) AS max_modlngno,
+    MIN(MODLNGTP) AS min_modlngtp, MAX(MODLNGTP) AS max_modlngtp,
+    MIN(MODMIN) AS min_modmin, MAX(MODMIN) AS max_modmin,
+    MIN(STRNGNO) AS min_strngno, MAX(STRNGNO) AS max_strngno,
+    MIN(STRNGTP) AS min_strngtp, MAX(STRNGTP) AS max_strngtp,
+    MIN(STRFREQW) AS min_strfreqw, MAX(STRFREQW) AS max_strfreqw,
+    MIN(ASISLEEP) AS min_asisleep, MAX(ASISLEEP) AS max_asisleep,
+    MIN(ASISLPFL) AS min_asislpfl, MAX(ASISLPFL) AS max_asislpfl,
+    MIN(ASISLPST) AS min_asislpst, MAX(ASISLPST) AS max_asislpst,
+    MIN(ASISLPMD) AS min_asislpmd, MAX(ASISLPMD) AS max_asislpmd,
+    MIN(ASIREST) AS min_asirest, MAX(ASIREST) AS max_asirest
+FROM nhis_2016_data;
+```
+Result:
+```sql
++---------+---------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+-----------+-----------+-----------+-----------+--------------+--------------+--------------+--------------+--------------+--------------+------------+------------+-----------+-----------+-----------+-----------+--------------+--------------+--------------+--------------+--------------+--------------+------------+------------+-------------+-------------+-------------+-------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+-------------+-------------+
+| min_age | max_age | min_dbhvpay | max_dbhvpay | min_dbhvcly | max_dbhvcly | min_dbhvpan | max_dbhvpan | min_dbhvcln | max_dbhvcln | min_vigno | max_vigno | min_vigtp | max_vigtp | min_vigfreqw | max_vigfreqw | min_viglngno | max_viglngno | min_viglngtp | max_viglngtp | min_vigmin | max_vigmin | min_modno | max_modno | min_modtp | max_modtp | min_modfreqw | max_modfreqw | min_modlngno | max_modlngno | min_modlngtp | max_modlngtp | min_modmin | max_modmin | min_strngno | max_strngno | min_strngtp | max_strngtp | min_strfreqw | max_strfreqw | min_asisleep | max_asisleep | min_asislpfl | max_asislpfl | min_asislpst | max_asislpst | min_asislpmd | max_asislpmd | min_asirest | max_asirest |
++---------+---------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+-----------+-----------+-----------+-----------+--------------+--------------+--------------+--------------+--------------+--------------+------------+------------+-----------+-----------+-----------+-----------+--------------+--------------+--------------+--------------+--------------+--------------+------------+------------+-------------+-------------+-------------+-------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+-------------+-------------+
+|      18 |      85 |           1 |           2 |           1 |           2 |           1 |           2 |           1 |           2 |         1 |       500 |         1 |         4 |            0 |           28 |            1 |          210 |            1 |            2 |         10 |        600 |         1 |       150 |         1 |         4 |            0 |           28 |            1 |          309 |            1 |            2 |         10 |        720 |           0 |         100 |           0 |           4 |            0 |           95 |            2 |           18 |            0 |            7 |            0 |            7 |            0 |            7 |           0 |           7 |
++---------+---------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+-----------+-----------+-----------+-----------+--------------+--------------+--------------+--------------+--------------+--------------+------------+------------+-----------+-----------+-----------+-----------+--------------+--------------+--------------+--------------+--------------+--------------+------------+------------+-------------+-------------+-------------+-------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+-------------+-------------+
+```
