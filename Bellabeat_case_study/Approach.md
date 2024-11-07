@@ -270,7 +270,7 @@ WHERE ActivityHour NOT BETWEEN '2016-03-12 00:00:00' AND '2016-05-12 23:59:59';
 ```
 
 
-#### 1.4 Hourly Activity Data Setup and Import (including a bit of initial time frame cleaning):
+#### 1.5 Hourly Activity Data Setup and Import (including a bit of initial time frame cleaning):
 In this step, I created the `minute_sleep` table to store detailed minute-by-minute sleep data from the *minuteSleep_merged.csv* files. These files, located in both the **Fitabase Data 3.12.16-4.11.16** and **Fitabase Data 4.12.16-5.12.16** folders, provide a high-resolution view of users’ sleep patterns, logging minute-level sleep statuses across the observation timeframe.
 
 The table was structured with columns for user ID, timestamp, sleep value (indicating sleep state), and a unique log identifier. Additionally, for analysis convenience, the timestamp was split into separate date and time columns.
@@ -351,6 +351,55 @@ This dataset provides national health data for the U.S. adult population, collec
 -	**Cited**: The NHIS dataset is publicly available through the CDC and is provided under strict data use guidelines to maintain privacy and confidentiality. The dataset can be cited as follows: 
     - CDC/NCHS (2016). National Health Interview Survey, 2016 [Public Use Data Release]. National Center for Health Statistics. Available from: https://www.cdc.gov/nchs/nhis/nhis_2016_data_release.htm
     - *Data Disclaimer: This project uses data from the 2016 National Health Interview Survey (NHIS), which is made available by the National Center for Health Statistics (NCHS) for statistical reporting and analysis only. All analyses are conducted in compliance with the data use restrictions provided by NCHS, with no attempt to identify individuals or link data to any identifiable information.*
+
+#### 2.1 NHIS Data Setup:
+In this step, I filtered and did an initial cleaning of the original dataset, i.e. *samadult.csv* which was derived from **CDC’s 2016 National Health Interview Survey (NHIS)** archives, as the original dataset had several columns that were not needed for this project and loading these irrelevant columns would slow down the data processing. Hence, this new filtered dataset was created with only relevant columns and I called it  *nhis_2016_data_cleaned.csv*. 
+
+I then created the `nhis_2016_data` table to store data from the *nhis_2016_data_cleaned.csv* file. The purpose of this data is to serve as a benchmark for wellness metrics, allowing a comparison of Fitbit users’ activity, sleep, and health behaviours with broader national averages. This table includes variables related to physical activity, sleep patterns, and wellness indicators, essential for our comparative analysis with Fitbit data.
+
+##### **SQL QUERIES:**
+Create and import data set to table `nhis_2016_data`:
+```sql
+CREATE TABLE nhis_2016_data (
+    SEX INT,
+    AGE_P INT,
+    SRVY_YR INT,
+    INTV_MON INT,
+    DBHVPAY INT,
+    DBHVCLY INT,
+    DBHVPAN INT,
+    DBHVCLN INT,
+    VIGNO INT,
+    VIGTP INT,
+    VIGFREQW INT,
+    VIGLNGNO INT,
+    VIGLNGTP INT,
+    VIGMIN INT,
+    MODNO INT,
+    MODTP INT,
+    MODFREQW INT,
+    MODLNGNO INT,
+    MODLNGTP INT,
+    MODMIN INT,
+    STRNGNO INT,
+    STRNGTP INT,
+    STRFREQW INT,
+    ASISLEEP INT,
+    ASISLPFL INT,
+    ASISLPST INT,
+    ASISLPMD INT,
+    ASIREST INT
+);
+```
+```sql
+-- Import nhis_2016_data_cleaned.csv into table "nhis_2016_data".
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/nhis_2016_data_cleaned.csv'
+INTO TABLE nhis_2016_data
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+```
 
 ### 3. WHO Health Guidelines:
 - We incorporate WHO’s recommendations for sleep, physical activity, and heart health as baseline standards. These recommendations help contextualize the analysis by providing universal benchmarks for healthy behaviour.
