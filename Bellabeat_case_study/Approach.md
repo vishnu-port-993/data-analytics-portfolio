@@ -5,7 +5,7 @@ This document outlines the structured approach used in the Bellabeat case study,
 ## Business Context: 
 Bellabeat is a company that specializes in wellness technology, designing products to help users understand and improve their health. As Bellabeat prepares to launch its new product, IVY+, a wellness tracker, there is a strong interest in understanding users' physical activity, sleep habits, and overall wellness trends. This knowledge will not only help inform product development but also enhance Bellabeat's marketing strategies and customer engagement by addressing key health areas important to its target audience.
 
-# 1. Ask Phase - Defining the Business Problem
+# 1. ASK PHASE - Defining the Business Problem
 - **Business Problem**: How can Bellabeat use data to provide meaningful insights into user health patterns and wellness goals, while also identifying areas for improvement in line with recognized health standards?
 - **Goal**: Identify actionable insights that Bellabeat can use to enhance wellness features and engage users effectively.
 - **Key Questions**:
@@ -27,7 +27,7 @@ By comparing Fitbit user data against NHIS survey data and WHO guidelines, we ca
 -	Identify Gaps where Fitbit users may fall short of recommended wellness standards, highlighting areas for potential product features or user guidance.
 -	Deliver Insights that are relevant, measurable, and aligned with Bellabeat's wellness-focused mission, supporting both the company’s product strategy and its goal of promoting healthier lifestyles.
 
-# 2. Prepare Phase
+# 2. PREPARE PHASE
 ## Data Sources:
 To address the business problem, we’ve selected two primary data sources that together offer both user-specific insights and population-level benchmarks:
 ### 1. Fitbit Data (03.12.2016 - 05.12.2016):
@@ -396,7 +396,7 @@ IGNORE 1 ROWS;
 3. **NHIS Data Filtering**: The NHIS dataset was extensive and initially included variables beyond the scope of this analysis. To streamline it, we filtered the data to retain only fields relevant to physical activity, sleep, and compliance with health guidelines. This filtering process resulted in a more targeted dataset, stored as *"nhis_2016_data_cleaned.csv"*
 
 
-# 2. Process Phase: Data Validation, Cleaning, and Preparation
+# 3. PROCESS PHASE: Data Validation, Cleaning, and Preparation
 The PROCESS phase in this project involved validating, cleaning, and structuring the selected datasets to ensure accurate, high-quality analysis. This phase is critical because clean, validated data forms the foundation of reliable insights and sound decision-making. Given the scope of this capstone project, the process phase is conducted with careful attention to Data Validation, Data Cleaning and Data Transformation.
 
 ## Data Cleaning Overview:
@@ -411,10 +411,10 @@ To ensure data integrity and quality, each table was subjected to the following 
 8.	**Descriptive Statistics Review**: Basic statistics were calculated for numeric columns to identify any anomalies or data inconsistencies.
 9.	**Overall Data Integrity Check**: A general check was conducted to ensure logical coherence across values.
 
-## 2.1 Processing and cleaning `daily_activity` table:
+## 3.1 Processing and cleaning `daily_activity` table:
 Following the import, I conducted several data cleaning steps as per the Data Cleaning Overview, including handling duplicates, standardizing date formats, ensuring valid numeric data, and removing null values.
 
-### 2.1.1 Key SQL queries used for cleaning:
+### 3.1.1 Key SQL queries used for cleaning:
 1.	**Identify Duplicates**: I checked for duplicate records based on Id and ActivityDate to avoid redundancy.
 ```sql
 SELECT
@@ -463,10 +463,10 @@ FROM daily_activity;
 +------------+--------------+------------+---------------+-----------------+--------------------------+--------------------+--------------------------+---------------------+-------------------------+-------------------+---------------------+----------------------+------------------+----------+
 ```
 
-## 2.2 Processing and cleaning `heartrate_seconds` table:
+## 3.2 Processing and cleaning `heartrate_seconds` table:
 After importing the data, I conducted multiple cleaning and validation steps to ensure the integrity of the heart rate data.
 
-### 2.2.1 Key SQL queries used for cleaning:
+### 3.2.1 Key SQL queries used for cleaning:
 1.	**Identify and Remove Duplicates**: Due to overlapping dates across the two folders, there were potential duplicates for the same Id and Time. I retained the record with the higher Value in cases where duplicates were found.
 ```sql
 SELECT Id, Time, COUNT(*)
@@ -512,9 +512,9 @@ FROM heartrate_seconds;
 | 4020332650 | 2016-05-05 22:11:55 |    95 |
 +------------+---------------------+-------+
 ```
-## 2.3 Processing and cleaning `sleep_day` table:
+## 3.3 Processing and cleaning `sleep_day` table:
 
-### 2.3.1 Key SQL queries used for cleaning:
+### 3.3.1 Key SQL queries used for cleaning:
 1.	**Identify and Remove Duplicates**: I identified duplicate records where the same Id and SleepDay occurred more than once. For simplicity, I retained only the earliest entry by creating a temporary temp_id column, which I used to differentiate and delete duplicate rows.
 ```sql
 SELECT Id, SleepDay, COUNT(*)
@@ -580,8 +580,8 @@ FROM sleep_day;
 ```
 
 
-## 2.4 Processing and cleaning `hourly_steps` and `hourly_calories` tables:
-### 2.4.1 Key SQL queries used for cleaning:
+## 3.4 Processing and cleaning `hourly_steps` and `hourly_calories` tables:
+### 3.4.1 Key SQL queries used for cleaning:
 1.	**Check for Null Values**: Queried each table for nulls in critical columns (`ActivityHour`, `StepTotal` in `hourly_steps`, and `Calories` in `hourly_calories`).
 ```sql
 SELECT
@@ -644,9 +644,9 @@ FROM hourly_calories;
 | 8792009665 | 2016-03-24 23:00:00 |       70 |
 +------------+---------------------+----------+
 ```
-## 2.5 Processing and cleaning `minute_sleep` table:
+## 3.5 Processing and cleaning `minute_sleep` table:
 The following steps ensured data quality and integrity within the minute_sleep table:
-### 2.5.1 Key SQL queries used for cleaning:
+### 3.5.1 Key SQL queries used for cleaning:
 1.	Splitting Date and Time Columns: After importing the data, the Date column was divided into `date_only` and `time_only` columns to support flexible time-based analyses.
 
 ```sql
@@ -723,8 +723,8 @@ FROM minute_sleep;
 +------------+-------+-------------+------------+-----------+
 ```
 
-## 2.6 Processing and cleaning `minute_sleep` table:
-### 2.6.1 Key SQL queries used for cleaning:
+## 3.6 Processing and cleaning `minute_sleep` table:
+### 3.6.1 Key SQL queries used for cleaning:
 1.	**Duplicate Records Check**: Verified that there were no duplicate records in the table.
 ```sql
 SELECT SEX, AGE_P, SRVY_YR, INTV_MON, DBHVPAY, DBHVCLY, DBHVPAN, DBHVCLN,
@@ -842,10 +842,10 @@ Result:
 |   2 |    23 |    2016 |        4 |       2 |       2 |       2 |       2 |     4 |     2 |        4 |       10 |        1 |     10 |     4 |     2 |        4 |       10 |        1 |     10 |       4 |       2 |        4 |        9 |        2 |        0 |        0 |       6 |
 +-----+-------+---------+----------+---------+---------+---------+---------+-------+-------+----------+----------+----------+--------+-------+-------+----------+----------+----------+--------+---------+---------+----------+----------+----------+----------+----------+---------+
 ```
-## 2.6 Creating Summary Tables:
+## 3.7 Creating Summary Tables:
 The purpose of this step is to prepare simplified, aggregated tables that focus on key metrics. These summary tables will make it easier to compare Fitbit data with NHIS benchmarks and analyze insights effectively.
 
-### 2.6.1: Weekly Physical Activity Summary Table
+### 3.7.1: Weekly Physical Activity Summary Table
 In this sub-step, I created a `weekly_activity_summary` table of key physical activity metrics from the `daily_activity` dataset. The goal was to aggregate moderate and vigorous activity minutes, steps, and calories for each Fitbit user on a weekly basis. This summary will facilitate comparisons with **NHIS data** and **WHO** recommendations on physical activity.
 
 **Initial Actions for Table Setup and Data Aggregation**:
@@ -925,7 +925,7 @@ Output:
 +------------+------+------+--------------------+-----------------------+-------------------------------+-------------------------------+
 ```
 
-### 2.6.2: Weekly Sleep Duration Summary
+### 3.7.2: Weekly Sleep Duration Summary
 In this step, we analyzed users’ sleep patterns by aggregating weekly sleep metrics from the `sleep_day` table. This allows us to observe trends in users' sleep behaviours, such as total weekly time in bed, total weekly minutes asleep, and average daily sleep duration.
 
 #### Key SQL queries used:
@@ -974,7 +974,7 @@ GROUP BY
 +------------+------+------+--------------------------+-----------------------------+------------------------------+
 ```
 
-### 2.6.3: Weekly Heart Rate Summary
+### 3.7.3: Weekly Heart Rate Summary
 The purpose of this step is to create a weekly summary of users’ heart rate data, focusing on their average weekly heart rates. This information will be instrumental in understanding heart rate trends over time and providing insights into user health and wellness. We calculate this summary from the `heartrate_seconds` table by averaging each user's heart rate values within each week. This dataset will later be compared to WHO and NHIS benchmarks to provide a comprehensive view of the users' cardiovascular health.
 #### Key SQL queries used:
 1.	**Create the `weekly_heart_rate_summary` Table:**
@@ -1045,10 +1045,10 @@ WHERE average_weekly_heart_rate < 40 OR average_weekly_heart_rate > 200;
 +------------+------+------+---------------------------+
 ```
 
-## 2.7 Additional Consistency Checks:
+## 3.8 Additional Consistency Checks:
 The purpose of this step is to perform a final round of consistency checks across all weekly summary tables (`weekly_activity_summary`, `weekly_sleep_summary`, `weekly_heart_rate_summary`, and `final_weekly_summary`). By identifying and addressing any remaining discrepancies, we ensure the reliability of the dataset used in the analysis phase.
 
-### 2.7.1: 
+### 3.8.1: 
 1. **Check Consistent Date Ranges** - To confirm that all dates are within our defined observation period (e.g., March 12, 2016, to May 12, 2016).
 #### Key SQL queries used:
 
@@ -1330,7 +1330,7 @@ WHERE
 +------------+------+------+--------------------+-----------------------+-------------------------------+-------------------------------+--------------------------+-----------------------------+------------------------------+---------------------------+
 ```
 
-## 2.8 Integrate WHO Baseline Recommendations:
+## 3.9 Integrate WHO Baseline Recommendations:
 The aim of this step is to incorporate WHO-recommended baseline metrics into our dataset for meaningful comparison. This will allow us to evaluate users' weekly activity and sleep data against globally recognized health standards. Specifically, we’ll focus on recommended activity and sleep levels, enabling a direct assessment of each user's adherence to these standards.
 
 **WHO Baseline Metrics**
@@ -1349,7 +1349,7 @@ ADD COLUMN who_baseline_activity_minutes INT DEFAULT 150,
 ADD COLUMN who_baseline_sleep_minutes INT DEFAULT 2940;
 ```
 
-## 2.9 Integrate NHIS Baseline Averages as Benchmarks:
+## 3.10 Integrate NHIS Baseline Averages as Benchmarks:
 Use the NHIS averages (vigorous minutes, moderate minutes, and sleep duration) as benchmarks to compare against the Fitbit weekly summaries for activity and sleep. This will allow us to assess how Fitbit users’ activity and sleep metrics align with or differ from national averages.
 ```sql
 CREATE VIEW nhis_2016_summary AS
@@ -1368,6 +1368,134 @@ FROM
 +---------------------------+---------------------------+---------------------------------+
 ```
 **Reasoning for this:**
-•	The NHIS benchmarks provide a practical and reliable reference for analyzing user fitness and wellness metrics, as they represent national averages for similar metrics.
-•	WHO guidelines are often broader, whereas NHIS provides actual observed data that aligns well with the specifics of the dataset we’re analyzing.
+1. 	The NHIS benchmarks provide a practical and reliable reference for analyzing user fitness and wellness metrics, as they represent national averages for similar metrics.
+2. 	WHO guidelines are often broader, whereas NHIS provides actual observed data that aligns well with the specifics of the dataset we’re analyzing.
 
+# 4. ANALYZE PHASE
+In the Analysis phase, our goal is to interpret user behaviour by comparing activity and sleep data against benchmarks established by the **NHIS** dataset. We aimed to assess how well users are meeting recommended levels of physical activity and sleep, which can provide insights for **Bellabeat's IVY+ wellness tracker**. These findings will inform recommendations on promoting healthier habits among users, ultimately aligning with **Bellabeat’s** mission to support wellness and fitness goals.
+Approach:
+We structured our analysis to evaluate user behaviour in three key areas:
+1.	**Vigorous Activity Minutes**
+2.	**Moderate Activity Minutes**
+3.	**Sleep Duration**
+For each metric, we calculated weekly totals and then compared them with **NHIS** benchmark averages. The comparative analysis focused on percentage differences to indicate whether users are meeting, exceeding, or falling short of recommended activity and sleep levels.
+
+## 4.1 Analysis Steps and Key SQL Queries:
+1.	**Calculating Average, Minimum, and Maximum Weekly Metrics:** To understand the range of user activity and sleep, we calculated the average, minimum, and maximum values for steps, calories burned, vigorous and moderate activity minutes, time in bed, minutes asleep, and heart rate. These basic aggregations allowed us to understand general patterns across users before making specific comparisons.
+**Query 1: Descriptive Statistics for `total_weekly_steps`**
+```sql
+SELECT 
+    AVG(total_weekly_steps) AS avg_weekly_steps,
+    MIN(total_weekly_steps) AS min_weekly_steps,
+    MAX(total_weekly_steps) AS max_weekly_steps
+FROM final_weekly_summary;
+```
+**Output**:
+```sql
++------------------+------------------+------------------+
+| avg_weekly_steps | min_weekly_steps | max_weekly_steps |
++------------------+------------------+------------------+
+|       48657.3478 |             8154 |            91001 |
++------------------+------------------+------------------+
+```
+**Query 2: Descriptive Statistics for `total_weekly_calories`**
+```sql
+SELECT 
+    AVG(total_weekly_calories) AS avg_weekly_calories,
+    MIN(total_weekly_calories) AS min_weekly_calories,
+    MAX(total_weekly_calories) AS max_weekly_calories
+FROM final_weekly_summary;
+```
+**Output**:
+```sql
++---------------------+---------------------+---------------------+
+| avg_weekly_calories | min_weekly_calories | max_weekly_calories |
++---------------------+---------------------+---------------------+
+|          14134.2609 |                3498 |               25773 |
++---------------------+---------------------+---------------------+
+```
+**Query 3: Descriptive Statistics for `total_weekly_vigorous_minutes`**
+```sql
+SELECT 
+    AVG(total_weekly_vigorous_minutes) AS avg_weekly_vigorous_minutes,
+    MIN(total_weekly_vigorous_minutes) AS min_weekly_vigorous_minutes,
+    MAX(total_weekly_vigorous_minutes) AS max_weekly_vigorous_minutes
+FROM 
+    final_weekly_summary;
+```
+**Output**:
+```sql
++-----------------------------+-----------------------------+-----------------------------+
+| avg_weekly_vigorous_minutes | min_weekly_vigorous_minutes | max_weekly_vigorous_minutes |
++-----------------------------+-----------------------------+-----------------------------+
+|                    134.5652 |                           0 |                         775 |
++-----------------------------+-----------------------------+-----------------------------+
+```
+**Query 4: Descriptive Statistics for `total_weekly_moderate_minutes`**
+```sql
+SELECT 
+    AVG(total_weekly_moderate_minutes) AS avg_weekly_moderate_minutes,
+    MIN(total_weekly_moderate_minutes) AS min_weekly_moderate_minutes,
+    MAX(total_weekly_moderate_minutes) AS max_weekly_moderate_minutes
+FROM 
+    final_weekly_summary;
+```
+**Output**:
+```sql
++-----------------------------+-----------------------------+-----------------------------+
+| avg_weekly_moderate_minutes | min_weekly_moderate_minutes | max_weekly_moderate_minutes |
++-----------------------------+-----------------------------+-----------------------------+
+|                     87.3043 |                           0 |                         283 |
++-----------------------------+-----------------------------+-----------------------------+
+```
+**Query 5: Descriptive Statistics for `total_weekly_time_in_bed`**
+```sql
+SELECT 
+    AVG(total_weekly_time_in_bed) AS avg_weekly_time_in_bed,
+    MIN(total_weekly_time_in_bed) AS min_weekly_time_in_bed,
+    MAX(total_weekly_time_in_bed) AS max_weekly_time_in_bed
+FROM 
+    final_weekly_summary;
+```
+**Output**:
+```sql
++------------------------+------------------------+------------------------+
+| avg_weekly_time_in_bed | min_weekly_time_in_bed | max_weekly_time_in_bed |
++------------------------+------------------------+------------------------+
+|              2009.2391 |                     61 |                   3747 |
++------------------------+------------------------+------------------------+
+```
+**Query 6: Descriptive Statistics for `total_weekly_minutes_asleep`**
+```sql
+SELECT 
+    AVG(total_weekly_minutes_asleep) AS avg_weekly_minutes_asleep,
+    MIN(total_weekly_minutes_asleep) AS min_weekly_minutes_asleep,
+    MAX(total_weekly_minutes_asleep) AS max_weekly_minutes_asleep
+FROM 
+    final_weekly_summary;
+```
+**Output**:
+```sql
++---------------------------+---------------------------+---------------------------+
+| avg_weekly_minutes_asleep | min_weekly_minutes_asleep | max_weekly_minutes_asleep |
++---------------------------+---------------------------+---------------------------+
+|                 1885.0652 |                        58 |                      3391 |
++---------------------------+---------------------------+---------------------------+
+```
+**Query 7: Descriptive Statistics for `average_weekly_heart_rate`**
+```sql
+SELECT 
+    AVG(average_weekly_heart_rate) AS avg_weekly_heart_rate,
+    MIN(average_weekly_heart_rate) AS min_weekly_heart_rate,
+    MAX(average_weekly_heart_rate) AS max_weekly_heart_rate
+FROM 
+    final_weekly_summary;
+```
+**Output**:
+```sql
++-----------------------+-----------------------+-----------------------+
+| avg_weekly_heart_rate | min_weekly_heart_rate | max_weekly_heart_rate |
++-----------------------+-----------------------+-----------------------+
+|     76.92056539784308 |                63.738 |                99.506 |
++-----------------------+-----------------------+-----------------------+
+```
