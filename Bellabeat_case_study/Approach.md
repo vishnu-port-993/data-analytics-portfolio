@@ -425,7 +425,7 @@ To ensure data integrity and quality, each table was subjected to the following 
 8.	**Descriptive Statistics Review**: Basic statistics were calculated for numeric columns to identify any anomalies or data inconsistencies.
 9.	**Overall Data Integrity Check**: A general check was conducted to ensure logical coherence across values.
 
-## 2.1 Processing and cleaning daily_activity table:
+## 2.1 Processing and cleaning `daily_activity` table:
 Following the import, I conducted several data cleaning steps as per the Data Cleaning Overview, including handling duplicates, standardizing date formats, ensuring valid numeric data, and removing null values.
 
 ### 2.1.1 Key SQL queries used for cleaning:
@@ -459,6 +459,8 @@ SELECT
     COUNT(DISTINCT Id) AS unique_users
 FROM daily_activity;
 ```
+4. Sample Output Verification:
+Below is a sample output from the `daily_activity` table to confirm the imported data and ensure it falls within the specified timeframe.
 ```sql
 +------------+--------------+------------+---------------+-----------------+--------------------------+--------------------+--------------------------+---------------------+-------------------------+-------------------+---------------------+----------------------+------------------+----------+
 | Id         | ActivityDate | TotalSteps | TotalDistance | TrackerDistance | LoggedActivitiesDistance | VeryActiveDistance | ModeratelyActiveDistance | LightActiveDistance | SedentaryActiveDistance | VeryActiveMinutes | FairlyActiveMinutes | LightlyActiveMinutes | SedentaryMinutes | Calories |
@@ -473,4 +475,55 @@ FROM daily_activity;
 | 6117666160 | 2016-04-28   |       3403 |           2.6 |             2.6 |                        0 |                  0 |                        0 |                 2.6 |                       0 |                 0 |                   0 |                  141 |              758 |     1879 |
 | 4319703577 | 2016-04-28   |      10817 |          7.28 |            7.28 |                        0 |               1.01 |                     0.33 |                5.94 |                       0 |                13 |                   8 |                  359 |              552 |     2367 |
 | 6962181067 | 2016-05-11   |       6722 |          4.44 |            4.44 |                        0 |               1.49 |                     0.31 |                2.65 |                       0 |                24 |                   7 |                  199 |              709 |     1855 |
-+------------+--------------+------------+---------------+-----------------+--------------------------+--------------------+--------------------------+---------------------+-------------------------+-------------------+---------------------+----------------------+------------------+----------+```
++------------+--------------+------------+---------------+-----------------+--------------------------+--------------------+--------------------------+---------------------+-------------------------+-------------------+---------------------+----------------------+------------------+----------+
+```
+
+## 2.2 Processing and cleaning `heartrate_seconds` table:
+After importing the data, I conducted multiple cleaning and validation steps to ensure the integrity of the heart rate data.
+
+### 2.1.1 Key SQL queries used for cleaning:
+1.	**Identify and Remove Duplicates**: Due to overlapping dates across the two folders, there were potential duplicates for the same Id and Time. I retained the record with the higher Value in cases where duplicates were found.
+```sql
+SELECT Id, Time, COUNT(*)
+FROM heartrate_seconds
+GROUP BY Id, Time
+HAVING COUNT(*) > 1;
+
+DELETE t1
+FROM heartrate_seconds t1
+INNER JOIN heartrate_seconds t2 
+ON t1.Id = t2.Id 
+AND t1.Time = t2.Time
+WHERE t1.Value < t2.Value;
+```
+2.	**Check for Missing or Invalid Values**: I validated that the Value column had no null or invalid entries (e.g., values less than or equal to zero).
+```sql
+SELECT * FROM heartrate_seconds
+WHERE Value IS NULL OR Value <= 0;
+```
+3.	**Data Integrity Check**: I conducted integrity checks by viewing a random sample of records, checking the earliest and latest timestamps, total records, and unique users, and verifying the presence of null values in key columns.
+```sql
+SELECT 
+    MIN(Time) AS earliest_time,
+    MAX(Time) AS latest_time,
+    COUNT(*) AS total_records,
+    COUNT(DISTINCT Id) AS unique_users
+FROM heartrate_seconds;
+```
+4. Sample Output Verification: The following sample output from `heartrate_seconds` shows random records to verify the data import and timeframe filtering.
+```sql
++------------+---------------------+-------+
+| Id         | Time                | Value |
++------------+---------------------+-------+
+| 7007744171 | 2016-04-18 21:32:05 |    91 |
+| 4388161847 | 2016-04-15 00:08:40 |    54 |
+| 8877689391 | 2016-04-25 20:51:23 |    76 |
+| 6775888955 | 2016-04-06 04:05:00 |    81 |
+| 4020332650 | 2016-04-06 20:52:22 |   105 |
+| 2347167796 | 2016-04-18 16:39:20 |    73 |
+| 6962181067 | 2016-04-06 07:09:30 |    75 |
+| 8877689391 | 2016-05-02 08:39:47 |    60 |
+| 4558609924 | 2016-04-10 18:16:55 |    83 |
+| 4020332650 | 2016-05-05 22:11:55 |    95 |
++------------+---------------------+-------+
+```
