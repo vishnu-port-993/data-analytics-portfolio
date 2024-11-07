@@ -323,20 +323,6 @@ DELETE FROM minute_sleep
 WHERE Date NOT BETWEEN '2016-03-12 00:00:00' AND '2016-05-12 23:59:59';
 ```
 
-```sql
--- Splitting the Date column into Date and Time for better hold over the data set.
-ALTER TABLE minute_sleep 
-ADD COLUMN date_only DATE, 
-ADD COLUMN time_only TIME;
-
-UPDATE minute_sleep
-SET 
-    date_only = DATE(Date),
-    time_only = TIME(Date);
-    
-ALTER TABLE minute_sleep DROP COLUMN Date;
-```
-
 ### 2. CDC’s 2016 National Health Interview Survey (NHIS):
 This dataset provides national health data for the U.S. adult population, collected and standardized by the CDC. The NHIS dataset includes:
 -	**Physical Activity**: Self-reported duration of moderate and vigorous activity, as well as indicators of whether individuals meet aerobic and strength guidelines.
@@ -591,4 +577,148 @@ FROM sleep_day;
 | 1503960366 | 2016-05-05 00:00:00 |                 1 |                247 |            264 |
 | 6962181067 | 2016-05-09 00:00:00 |                 1 |                489 |            497 |
 +------------+---------------------+-------------------+--------------------+----------------+
+```
+
+
+## 2.4 Processing and cleaning `hourly_steps` and `hourly_calories` tables:
+### 2.4.1 Key SQL queries used for cleaning:
+1.	**Check for Null Values**: Queried each table for nulls in critical columns (`ActivityHour`, `StepTotal` in `hourly_steps`, and `Calories` in `hourly_calories`).
+```sql
+SELECT
+    COUNT(*) AS total_rows,
+    COUNT(ActivityHour) AS non_null_activity_hour,
+    COUNT(StepTotal) AS non_null_steps
+FROM hourly_steps;
+
+SELECT
+    COUNT(*) AS total_rows,
+    COUNT(ActivityHour) AS non_null_activity_hour,
+    COUNT(Calories) AS non_null_calories
+FROM hourly_calories;
+```
+2.	**Date Range Verification**: Confirmed each table's earliest and latest timestamps to ensure they matched the observation period.
+```sql
+SELECT
+    MIN(ActivityHour) AS earliest_date,
+    MAX(ActivityHour) AS latest_date
+FROM hourly_steps;
+
+SELECT
+    MIN(ActivityHour) AS earliest_date,
+    MAX(ActivityHour) AS latest_date
+FROM hourly_calories;
+```
+3. **Sample Output Verification**: The following random samples verify that the data in the `hourly_steps` and `hourly_calories` tables are correctly formatted and fall within the specified timeframe.
+- `hourly_steps`
+```sql
++------------+---------------------+-----------+
+| Id         | ActivityHour        | StepTotal |
++------------+---------------------+-----------+
+| 2022484408 | 2016-04-06 09:00:00 |      4630 |
+| 1844505072 | 2016-04-18 04:00:00 |         0 |
+| 2026352035 | 2016-05-02 23:00:00 |         0 |
+| 1927972279 | 2016-04-05 07:00:00 |       158 |
+| 4558609924 | 2016-03-12 08:00:00 |         0 |
+| 5553957443 | 2016-04-17 12:00:00 |         0 |
+| 8253242879 | 2016-04-05 15:00:00 |         0 |
+| 6962181067 | 2016-04-29 02:00:00 |         0 |
+| 6962181067 | 2016-05-10 06:00:00 |        36 |
+| 4020332650 | 2016-05-02 12:00:00 |         0 |
++------------+---------------------+-----------+
+```
+
+- `hourly_calories`
+```sql
++------------+---------------------+----------+
+| Id         | ActivityHour        | Calories |
++------------+---------------------+----------+
+| 1644430081 | 2016-04-21 23:00:00 |       86 |
+| 2026352035 | 2016-04-16 03:00:00 |       47 |
+| 8792009665 | 2016-03-12 18:00:00 |       70 |
+| 1624580081 | 2016-04-17 16:00:00 |       50 |
+| 4020332650 | 2016-05-11 02:00:00 |       83 |
+| 8583815059 | 2016-04-30 13:00:00 |      248 |
+| 5577150313 | 2016-03-24 20:00:00 |      147 |
+| 1927972279 | 2016-03-23 14:00:00 |      104 |
+| 8877689391 | 2016-05-10 23:00:00 |       73 |
+| 8792009665 | 2016-03-24 23:00:00 |       70 |
++------------+---------------------+----------+
+```
+## 2.5 Processing and cleaning `minute_sleep` table:
+The following steps ensured data quality and integrity within the minute_sleep table:
+### 2.5.1 Key SQL queries used for cleaning:
+1.	Splitting Date and Time Columns: After importing the data, the Date column was divided into `date_only` and `time_only` columns to support flexible time-based analyses.
+
+```sql
+ALTER TABLE minute_sleep 
+ADD COLUMN date_only DATE, 
+ADD COLUMN time_only TIME;
+
+UPDATE minute_sleep
+SET 
+    date_only = DATE(Date),
+    time_only = TIME(Date);
+    
+ALTER TABLE minute_sleep DROP COLUMN Date;
+```
+
+2.	Duplicate Removal:
+•	Identified and removed duplicate records based on unique combinations of `Id`, `date_only`, `time_only`, `Value`, and `LogId`. 
+•	To ensure selective removal, a temporary `temp_id` column was added, and duplicates were eliminated while retaining only the first occurrence of each unique entry.
+```sql
+ALTER TABLE minute_sleep ADD COLUMN temp_id INT AUTO_INCREMENT PRIMARY KEY;
+
+CREATE TEMPORARY TABLE temp_minute_sleep AS
+SELECT MIN(temp_id) AS temp_id
+FROM minute_sleep
+GROUP BY Id, date_only, time_only, Value, LogId;
+
+DELETE FROM minute_sleep
+WHERE temp_id NOT IN (
+    SELECT temp_id FROM temp_minute_sleep
+);
+
+DROP TEMPORARY TABLE temp_minute_sleep;
+```
+3.	Null and Integrity Checks:
+•	Verified that essential columns (`Id`, `date_only`, `time_only`, `Value`, and `LogId`) contained no null values.
+```sql
+SELECT 
+    COUNT(*) AS total_rows,
+    COUNT(Id) AS non_null_id,
+    COUNT(date_only) AS non_null_date,
+    COUNT(time_only) AS non_null_time,
+    COUNT(Value) AS non_null_value,
+    COUNT(LogId) AS non_null_logid
+FROM minute_sleep;
+```
+•	Checked the date range, confirming that entries fell within the defined timeframe.
+```sql
+SELECT MIN(date_only) AS earliest_date, MAX(date_only) AS latest_date
+FROM minute_sleep;
+```
+•	Conducted descriptive statistics on Value to assess data distribution and consistency across sleep states.
+```sql
+SELECT 
+    MIN(Value) AS min_value,
+    MAX(Value) AS max_value,
+    AVG(Value) AS avg_value
+FROM minute_sleep;
+```
+4. **Sample Output Verification**: The following random samples verify that the data in the ` minute_sleep` table is correctly formatted and fall within the specified timeframe.
+```sql
++------------+-------+-------------+------------+-----------+
+| Id         | Value | LogId       | date_only  | time_only |
++------------+-------+-------------+------------+-----------+
+| 5553957443 |     1 | 11534854778 | 2016-05-01 | 00:03:00  |
+| 7086361926 |     3 | 11581172715 | 2016-05-08 | 00:33:00  |
+| 2347167796 |     1 | 11213899920 | 2016-03-25 | 05:41:00  |
+| 8378563200 |     1 | 11231487569 | 2016-03-27 | 04:49:30  |
+| 7086361926 |     1 | 11341334566 | 2016-04-08 | 02:46:00  |
+| 5553957443 |     1 | 11234106086 | 2016-03-24 | 02:53:30  |
+| 8378563200 |     1 | 11471818605 | 2016-04-24 | 06:48:30  |
+| 4445114986 |     2 | 11572172742 | 2016-05-07 | 06:06:30  |
+| 8792009665 |     1 | 11304567345 | 2016-04-03 | 06:44:00  |
+| 6962181067 |     1 | 11321297696 | 2016-04-06 | 01:08:00  |
++------------+-------+-------------+------------+-----------+
 ```
