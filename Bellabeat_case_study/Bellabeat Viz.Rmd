@@ -1,0 +1,243 @@
+---
+title: "Bellabeat Case Study"
+author: "Vishnu"
+date: "2024-11-02"
+output:
+  html_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# ANALYSIS
+This analysis aims to explore the Fitbit data for various health metrics, with an emphasis on average weekly steps, activity minutes, sleep minutes, and heart rate per user. By comparing users' metrics to established baselines, we can gain insights into their general activity and wellness levels.
+
+# Step 1: Set the Working Directory
+To ensure R reads from the correct directory, we set the working directory to the folder where the data files are stored.
+
+## 1.1 Set working directory
+
+```{r set working directory}
+setwd("/cloud/project/Bellabeat Case Study/Data Sources")
+```
+## 1.2 Verify the current working directory
+```{r verify directory}
+getwd()
+```
+
+# Step 2: Load the Data
+In this step, we load the required data files: nhis_2016_summary.csv, final_weekly_summary.csv, and who_baseline_summary.csv. These files contain information on user activity, sleep, and heart rate metrics.
+
+## 2.1 Load necessary data files
+
+```{r Loading csv data}
+nhis_data <- read.csv("nhis_2016_summary.csv", header = TRUE)
+weekly_summary <- read.csv("final_weekly_summary.csv", header = TRUE)
+who_baseline <- read.csv("who_baseline_summary.csv", header = TRUE)
+```
+
+## 2.2 Preview the data
+Displaying the first few rows of each dataset to verify the structure and contents.
+
+```{r preview data}
+head(nhis_data)
+head(weekly_summary)
+head(who_baseline)
+```
+
+# Step 3: Data Wrangling and Preparation for Visualization
+This step involves calculating key metrics for each user, such as their average weekly activity, sleep, and heart rate metrics, and comparing these metrics to NHIS and WHO baselines where applicable.
+
+## 3.1 Load Required Libraries
+```{r installing and loading libraries}
+install.packages("tidyverse")
+install.packages("tidyr")
+library(tidyverse)
+library(tidyr)
+library(dplyr)
+```
+
+## 3.2 Calculate Mean Values for Key Metrics
+Using the weekly_summary data, we calculate average weekly metrics for steps, vigorous activity, moderate activity, sleep, and heart rate.
+
+```{r Calculating mean value from weekly summary data}
+weekly_summary_summary <- weekly_summary %>%
+  summarise(
+    avg_weekly_steps = mean(total_weekly_steps, na.rm = TRUE),
+    avg_weekly_vigorous_minutes = mean(total_weekly_vigorous_minutes, na.rm = TRUE),
+    avg_weekly_moderate_minutes = mean(total_weekly_moderate_minutes, na.rm = TRUE),
+    avg_weekly_minutes_asleep = mean(total_weekly_minutes_asleep, na.rm = TRUE),
+    avg_weekly_heart_rate = mean(average_weekly_heart_rate, na.rm = TRUE)
+  )
+```
+
+## 3.3 Display the summarized results
+
+```{r}
+weekly_summary_summary
+```
+
+## 3.4 Calculate Average Vigorous and Moderate Activity Minutes per User
+```{r}
+vigorous_moderate_summary <- weekly_summary %>%
+  group_by(Id) %>%
+  summarise(
+    avg_vigorous_minutes = mean(total_weekly_vigorous_minutes, na.rm = TRUE),
+    avg_moderate_minutes = mean(total_weekly_moderate_minutes, na.rm = TRUE)
+  )
+```
+
+## 3.4.1 Reshape Data for Plotting
+We reshape the data into long format to create a combined bar plot for vigorous and moderate activity minutes.
+
+```{r}
+vigorous_moderate_long <- vigorous_moderate_summary %>%
+  pivot_longer(
+    cols = c(avg_vigorous_minutes, avg_moderate_minutes),
+    names_to = "Activity_Type",
+    values_to = "Average_Minutes"
+  )
+```
+
+# Step 4: Create Visualizations for Key Metrics
+We visualize key metrics to uncover trends and compare users' activity and sleep patterns against baseline recommendations.
+We’ll start by creating individual plots for each key metric to show general trends. Here are the visualizations we’ll make:
+
+    - **Weekly Steps**: A bar plot showing average weekly steps per user.
+    - **Weekly Vigorous and Moderate Activity Minutes**: A bar plot comparing average weekly vigorous and moderate activity minutes.
+    - **Weekly Sleep Minutes**: A bar plot of average weekly sleep minutes, including NHIS baseline comparison.
+    - **Weekly Heart Rate**: A line plot of average weekly heart rate per user.
+
+### Load ggplot2 for Plotting
+```{r loading ggplot2}
+library(ggplot2)
+```
+
+# 4.1: Average Weekly Steps Per User
+This plot shows the average weekly steps for each user, highlighting individual differences in daily activity.
+
+```{r Plot average weekly steps}
+ggplot(weekly_summary, aes(x = factor(Id), y = total_weekly_steps)) +
+  geom_bar(stat = "summary", fun = "mean", fill = "darkblue") +
+  geom_text(
+    stat = "summary",
+    fun = "mean",
+    aes(label = round(after_stat(y), 0)),
+    vjust = -0.5, 
+    color = "black",
+    size = 3
+  ) +
+  labs(
+    title = "Average Weekly Steps per User",
+    x = "User ID",
+    y = "Average Weekly Steps"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+```
+
+# 4.2: Average Weekly Vigorous and Moderate Activity Minutes per User
+This combined bar plot compares users' average vigorous and moderate activity levels, showcasing their engagement in different activity intensities.
+
+```{r Create the combined bar plot}
+ggplot(vigorous_moderate_long, aes(x = factor(Id), y = Average_Minutes, fill = Activity_Type)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    scale_fill_manual(values = c("darkred", "orange")) +  # Set custom colors
+    geom_text(
+        aes(label = round(Average_Minutes, 0)), 
+        position = position_dodge(width = 1), 
+        vjust = -0.3,  # Adjust this value to move labels higher above bars
+        size = 3, 
+        color = "black"
+    ) + 
+    labs(
+        title = "Average Weekly Vigorous and Moderate Activity Minutes per User",
+        x = "User ID",
+        y = "Average Weekly Activity Minutes",
+        fill = "Activity Type"
+    ) +
+    theme_minimal() +
+    theme(
+        plot.title = element_text(hjust = 0.5, size = 12, face = "bold"),  # Reduce font size and center the title
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(t = 30, r = 10, b = 10, l = 10)  # Increase top margin to ensure title fits within plot area
+    )
+```
+
+# Step 4.3: Average Weekly Sleep Minutes per User
+This bar plot illustrates average weekly sleep duration per user, with a reference line for the NHIS baseline (418.84 minutes/week).
+
+
+```{r}
+nhis_sleep_baseline <- 418.84
+
+aggregated_sleep_data <- weekly_summary %>%
+  group_by(Id) %>%
+  summarize(avg_weekly_minutes_asleep = mean(total_weekly_minutes_asleep))
+
+ggplot(aggregated_sleep_data, aes(x = factor(Id), y = avg_weekly_minutes_asleep)) +
+    geom_bar(stat = "identity", fill = "lightblue") +
+    geom_hline(yintercept = nhis_sleep_baseline, color = "red", linetype = "dashed", linewidth = 1) +
+    geom_text(
+        aes(label = round(avg_weekly_minutes_asleep, 0)),
+        vjust = -0.5, # Moves label above the bar
+        size = 3, # Reduce size for better readability
+        color = "black"
+    ) +
+    # Add annotation near the NHIS baseline line
+    annotate(
+        "text", x = Inf, y = nhis_sleep_baseline, label = "NHIS Baseline", 
+        color = "darkred", hjust = 1.2, vjust = -0.3, size = 3.5) +
+    labs(
+        title = "Average Weekly Sleep Minutes per User",
+        x = "User ID",
+        y = "Average Weekly Sleep Minutes"
+    ) +
+    theme_minimal() +
+    theme(
+        plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(t = 30, r = 10, b = 10, l = 10) # Increased top margin
+    )
+```
+
+# Step 4.4: Average Weekly Heart Rate per User
+The line plot below shows average weekly heart rate per user, providing insight into users' cardiovascular health.
+
+###  Create aggregated_heart_rate_data
+```{r Aggregate the heart rate data to get average weekly heart rate per user}
+aggregated_heart_rate_data <- weekly_summary %>%
+    group_by(Id) %>%
+    summarise(avg_weekly_heart_rate = mean(average_weekly_heart_rate, na.rm = TRUE))
+
+aggregated_heart_rate_data <- aggregated_heart_rate_data[order(aggregated_heart_rate_data$Id), ]
+```
+
+
+```{r}
+ggplot(aggregated_heart_rate_data, aes(x = factor(Id), y = avg_weekly_heart_rate, group = 1)) +
+    geom_line(color = "blue", linewidth = 1) +  # Changed 'size' to 'linewidth'
+    geom_point(color = "blue", size = 3) +
+    geom_text(
+        aes(label = round(avg_weekly_heart_rate, 1)),
+        nudge_y = 1.5,  # Adjust label position slightly above the line
+        color = "black",
+        size = 3
+    ) +
+    labs(
+        title = "Average Weekly Heart Rate per User",
+        x = "User ID",
+        y = "Average Weekly Heart Rate (bpm)"
+    ) +
+    theme_minimal() +
+    theme(
+        plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
+        axis.text.x = element_text(angle = 45, hjust = 1)
+    )
+```
+
+
