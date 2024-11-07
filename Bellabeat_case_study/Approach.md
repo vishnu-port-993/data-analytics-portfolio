@@ -50,11 +50,9 @@ In this step, I created the `daily_activity` table to store daily activity data 
 
 The `daily_activity` table was structured with columns for user ID, activity date, total steps, distance metrics, various activity intensities, active minutes, sedentary minutes, and calories burned. I used `STR_TO_DATE` to format the date consistently during import, ensuring accurate date-based queries.
 
-**SQL QUERIES:**
-
+##### **SQL QUERIES:**
+1.1: Create table and import data set to `daily_activity` :
 ```sql
--- Query to create `daily_activity` table
-
 CREATE TABLE daily_activity (
     Id BIGINT,
     ActivityDate DATE,
@@ -73,12 +71,40 @@ CREATE TABLE daily_activity (
     Calories INT
 );
 ```
+```sql
+-- Import dailyActivity_merged.csv for time frame 3.12.16-4.11.16 into table "daily_activity"
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Fitabase Data 3.12.16-4.11.16/dailyActivity_merged.csv'
+INTO TABLE daily_activity
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Id, @ActivityDate, TotalSteps, TotalDistance, TrackerDistance, LoggedActivitiesDistance, VeryActiveDistance, ModeratelyActiveDistance, LightActiveDistance, SedentaryActiveDistance, VeryActiveMinutes, FairlyActiveMinutes, LightlyActiveMinutes, SedentaryMinutes, Calories)
+SET ActivityDate = STR_TO_DATE(@ActivityDate, '%m/%d/%Y');
+```
+```sql
+-- Ensuring that all records for this import fall within the observation time frame (2016-03-12 to 2016-04-11)
+DELETE FROM daily_activity
+WHERE ActivityDate NOT BETWEEN '2016-03-12' AND '2016-04-11';
+```
 
+```sql
+-- Import dailyActivity_merged.csv for timeframe, but for the time frame 4.12.16-5.12.16 into the same table "daily_activity" which will merge both the csv files into one table.
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Fitabase Data 4.12.16-5.12.16/dailyActivity_merged.csv'
+INTO TABLE daily_activity
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Id, @ActivityDate, TotalSteps, TotalDistance, TrackerDistance, LoggedActivitiesDistance, VeryActiveDistance, ModeratelyActiveDistance, LightActiveDistance, SedentaryActiveDistance, VeryActiveMinutes, FairlyActiveMinutes, LightlyActiveMinutes, SedentaryMinutes, Calories)
+SET ActivityDate = STR_TO_DATE(@ActivityDate, '%m/%d/%Y');
+```
 
-
-
-
-
+```sql
+Ensuring that all records for this import fall within the overall observation time frame (2016-03-12 to 2016-05-12)
+DELETE FROM daily_activity
+WHERE ActivityDate NOT BETWEEN '2016-03-12' AND '2016-05-12';
+```
 
 
   
