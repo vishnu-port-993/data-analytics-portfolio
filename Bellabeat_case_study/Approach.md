@@ -51,7 +51,7 @@ In this step, I created the `daily_activity` table to store daily activity data 
 The `daily_activity` table was structured with columns for user ID, activity date, total steps, distance metrics, various activity intensities, active minutes, sedentary minutes, and calories burned. I used `STR_TO_DATE` to format the date consistently during import, ensuring accurate date-based queries.
 
 ##### **SQL QUERIES:**
-1.1: Create table and import data set to `daily_activity` :
+Create and import data set to table `daily_activity` :
 ```sql
 CREATE TABLE daily_activity (
     Id BIGINT,
@@ -89,7 +89,7 @@ WHERE ActivityDate NOT BETWEEN '2016-03-12' AND '2016-04-11';
 ```
 
 ```sql
--- Import dailyActivity_merged.csv for timeframe, but for the time frame 4.12.16-5.12.16 into the same table "daily_activity" which will merge both the csv files into one table.
+-- Import dailyActivity_merged.csv for timeframe, but for the time frame 4.12.16-5.12.16 into the same table "daily_activity" which will merge both the CSV files into one table.
 LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Fitabase Data 4.12.16-5.12.16/dailyActivity_merged.csv'
 INTO TABLE daily_activity
 FIELDS TERMINATED BY ','
@@ -101,13 +101,189 @@ SET ActivityDate = STR_TO_DATE(@ActivityDate, '%m/%d/%Y');
 ```
 
 ```sql
-Ensuring that all records for this import fall within the overall observation time frame (2016-03-12 to 2016-05-12)
+-- Ensuring that all records for this import fall within the overall observation time frame (2016-03-12 to 2016-05-12)
 DELETE FROM daily_activity
 WHERE ActivityDate NOT BETWEEN '2016-03-12' AND '2016-05-12';
 ```
 
+#### 1.2 Heart Rate Data Setup and Import (including a bit of initial time frame cleaning):
+In this step, I created the `heartrate_seconds` table to store high-resolution, second-level heart rate data from the *heartrate_seconds_merged.csv* files. These files were available in both **Fitabase Data 3.12.16-4.11.16** and **Fitabase Data 4.12.16-5.12.16** folders, providing detailed insights into users' heart rate patterns across the project’s timeframe.
 
-  
+The table includes fields for ID, Time, and Value, representing the user ID, timestamp, and heart rate value respectively. Consistent with Step 1.1, I formatted the Time field to ensure uniformity and applied a timeframe filter to retain data only within the observation period of 2016-03-12 to 2016-05-12.
+
+##### **SQL QUERIES:**
+Create and import data set to table `heartrate_seconds`:
+```sql
+CREATE TABLE heartrate_seconds (
+    Id BIGINT,
+    Time TIMESTAMP,
+    Value INT
+);
+```
+```sql
+-- Import heartrate_seconds_merged.csv for time frame 3.12.16-4.11.16 into table "heartrate_seconds"
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Fitabase Data 3.12.16-4.11.16/heartrate_seconds_merged.csv'
+INTO TABLE heartrate_seconds
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Id, @Time, Value)
+SET Time = STR_TO_DATE(@Time, '%m/%d/%Y %r');
+```
+```sql
+-- Ensuring that all records for this import fall within the observation time frame (2016-03-12 to 2016-04-11)
+DELETE FROM heartrate_seconds
+WHERE Time NOT BETWEEN '2016-03-12 00:00:00' AND '2016-04-11 23:59:59';
+```sql
+-- Import heartrate_seconds_merged.csv for time frame, but for the time frame 4.12.16-5.12.16 into the same table "heartrate_seconds" which will merge both the CSV files into one table.
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Fitabase Data 4.12.16-5.12.16/heartrate_seconds_merged.csv'
+INTO TABLE heartrate_seconds
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Id, @Time, Value)
+SET Time = STR_TO_DATE(@Time, '%m/%d/%Y %r');
+```
+```sql
+-- Ensuring that all records for this import fall within the overall observation time frame (2016-03-12 to 2016-05-12)
+DELETE FROM heartrate_seconds
+WHERE Time NOT BETWEEN '2016-03-12 00:00:00' AND '2016-05-12 23:59:59';
+```
+
+
+#### 1.3 Sleep Data Setup and Import (including a bit of initial time frame cleaning):
+In this step, I created the `sleep_day` table to store daily sleep data from the *sleepDay_merged.csv* file. This file was available only in the **Fitabase Data 4.12.16-5.12.16** folder, indicating that sleep data was not collected for the earlier timeframe (March 12 - April 11, 2016).
+
+The table includes essential metrics on user sleep patterns, such as total minutes asleep and total time in bed, which are crucial for understanding correlations between sleep and daily activity levels.
+
+The table was structured with columns for user ID, sleep date, total sleep records, total minutes asleep, and total time in bed. Consistent with previous steps, I formatted the timestamp for `SleepDay` to maintain uniformity across tables, ensuring that only data within the timeframe between 2016-04-12 and 2016-05-12 was included.
+
+##### **SQL QUERIES:**
+Create and import data set to table `sleep_day`:
+
+```sql
+CREATE TABLE sleep_day (
+    Id BIGINT,
+    SleepDay DATETIME,
+    TotalSleepRecords INT,
+    TotalMinutesAsleep INT,
+    TotalTimeInBed INT
+);
+```
+```sql
+-- Import sleepDay_merged.csv for time frame 4.12.16 - 5.12.16 into table "sleep_day" 
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Fitabase Data 4.12.16-5.12.16/sleepDay_merged.csv'
+INTO TABLE sleep_day
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Id, @SleepDay, TotalSleepRecords, TotalMinutesAsleep, TotalTimeInBed)
+SET SleepDay = STR_TO_DATE(@SleepDay, '%m/%d/%Y %r');
+```
+```sql
+-- Ensuring that all records for this import fall within the observation time frame (BETWEEN '2016-03-12 00:00:00' AND '2016-05-12 23:59:59')
+DELETE FROM sleep_day
+WHERE SleepDay NOT BETWEEN '2016-04-12 00:00:00' AND '2016-05-12 23:59:59';
+```
+
+#### 1.4 Hourly Activity Data Setup and Import (including a bit of initial time frame cleaning):
+In this step, we set up and cleaned two hourly-level activity tables to capture detailed insights on users’ physical activity: `hourly_steps` and `hourly_calories`. Both tables pull from respective CSV files across two date ranges (3.12.16 - 5.12.16), allowing for fine-grained hourly analysis. Key actions included setting up the tables, importing data, and filtering based on the observation timeframe.
+
+##### **SQL QUERIES:**
+Create and import data set to table `hourly_steps` and `hourly_calories`:
+```sql
+CREATE TABLE hourly_steps (
+    Id BIGINT,
+    ActivityHour TIMESTAMP,
+    StepTotal INT
+);
+
+CREATE TABLE hourly_calories (
+    Id BIGINT,
+    ActivityHour TIMESTAMP,
+    Calories INT
+);
+```
+
+```sql
+-- Import hourlySteps_merged.csv and hourlyCalories_merged.csv for time frame 3.12.16-4.11.16 into table "hourly_steps" and "hourly_calories" respectively.
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Fitabase Data 3.12.16-4.11.16/hourlySteps_merged.csv'
+INTO TABLE hourly_steps
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Id, @ActivityHour, StepTotal)
+SET ActivityHour = STR_TO_DATE(@ActivityHour, '%m/%d/%Y %h:%i:%s %p');
+
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Fitabase Data 3.12.16-4.11.16/hourlyCalories_merged.csv'
+INTO TABLE hourly_calories
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Id, @ActivityHour, Calories)
+SET ActivityHour = STR_TO_DATE(@ActivityHour, '%m/%d/%Y %h:%i:%s %p');
+```
+
+```sql
+-- Import hourlySteps_merged.csv and hourlyCalories_merged.csv for timeframe, but for the time frame 4.12.16-5.12.16 into the same table "hourly_steps" and "hourly_calories" respectively which will merge both the CSV files into one table each.
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Fitabase Data 4.12.16-5.12.16/hourlySteps_merged.csv'
+INTO TABLE hourly_steps
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Id, @ActivityHour, StepTotal)
+SET ActivityHour = STR_TO_DATE(@ActivityHour, '%m/%d/%Y %h:%i:%s %p');
+
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Fitabase Data 4.12.16-5.12.16/hourlyCalories_merged.csv'
+INTO TABLE hourly_calories
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Id, @ActivityHour, Calories)
+SET ActivityHour = STR_TO_DATE(@ActivityHour, '%m/%d/%Y %h:%i:%s %p');
+```
+
+```sql
+-- Ensuring that all records for this import fall within the observation time frame (2016-03-12 to 2016-04-11)
+DELETE FROM hourly_steps
+WHERE ActivityHour NOT BETWEEN '2016-03-12 00:00:00' AND '2016-04-11 23:59:59';
+
+DELETE FROM hourly_calories
+WHERE ActivityHour NOT BETWEEN '2016-03-12 00:00:00' AND '2016-04-11 23:59:59';
+```
+
+```sql
+-- Ensuring that all records for this import fall within the overall observation time frame (2016-03-12 to 2016-05-12)
+DELETE FROM hourly_steps
+WHERE ActivityHour NOT BETWEEN '2016-03-12 00:00:00' AND '2016-05-12 23:59:59';
+
+DELETE FROM hourly_calories
+WHERE ActivityHour NOT BETWEEN '2016-03-12 00:00:00' AND '2016-05-12 23:59:59';
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### 2. CDC’s 2016 National Health Interview Survey (NHIS):
 This dataset provides national health data for the U.S. adult population, collected and standardized by the CDC. The NHIS dataset includes:
