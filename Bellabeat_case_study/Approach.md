@@ -705,7 +705,7 @@ SELECT
     AVG(Value) AS avg_value
 FROM minute_sleep;
 ```
-4. **Sample Output Verification**: The following random samples verify that the data in the ` minute_sleep` table is correctly formatted and fall within the specified timeframe.
+4. **Sample Output Verification**: The following random samples verify that the data in the `minute_sleep` table is correctly formatted and falls within the specified timeframe.
 ```sql
 +------------+-------+-------------+------------+-----------+
 | Id         | Value | LogId       | date_only  | time_only |
@@ -824,4 +824,508 @@ Result:
 +---------+---------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+-----------+-----------+-----------+-----------+--------------+--------------+--------------+--------------+--------------+--------------+------------+------------+-----------+-----------+-----------+-----------+--------------+--------------+--------------+--------------+--------------+--------------+------------+------------+-------------+-------------+-------------+-------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+-------------+-------------+
 |      18 |      85 |           1 |           2 |           1 |           2 |           1 |           2 |           1 |           2 |         1 |       500 |         1 |         4 |            0 |           28 |            1 |          210 |            1 |            2 |         10 |        600 |         1 |       150 |         1 |         4 |            0 |           28 |            1 |          309 |            1 |            2 |         10 |        720 |           0 |         100 |           0 |           4 |            0 |           95 |            2 |           18 |            0 |            7 |            0 |            7 |            0 |            7 |           0 |           7 |
 +---------+---------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+-----------+-----------+-----------+-----------+--------------+--------------+--------------+--------------+--------------+--------------+------------+------------+-----------+-----------+-----------+-----------+--------------+--------------+--------------+--------------+--------------+--------------+------------+------------+-------------+-------------+-------------+-------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+-------------+-------------+
+```
+4. **Sample Output Verification**: The following random samples verify that the data in the `nhis_2016_data` table is correctly formatted:
+```sql
++-----+-------+---------+----------+---------+---------+---------+---------+-------+-------+----------+----------+----------+--------+-------+-------+----------+----------+----------+--------+---------+---------+----------+----------+----------+----------+----------+---------+
+| SEX | AGE_P | SRVY_YR | INTV_MON | DBHVPAY | DBHVCLY | DBHVPAN | DBHVCLN | VIGNO | VIGTP | VIGFREQW | VIGLNGNO | VIGLNGTP | VIGMIN | MODNO | MODTP | MODFREQW | MODLNGNO | MODLNGTP | MODMIN | STRNGNO | STRNGTP | STRFREQW | ASISLEEP | ASISLPFL | ASISLPST | ASISLPMD | ASIREST |
++-----+-------+---------+----------+---------+---------+---------+---------+-------+-------+----------+----------+----------+--------+-------+-------+----------+----------+----------+--------+---------+---------+----------+----------+----------+----------+----------+---------+
+|   2 |    55 |    2016 |        3 |       1 |       2 |       1 |       1 |     2 |     2 |        2 |        2 |        2 |    120 |     4 |     2 |        4 |        3 |        2 |    180 |       0 |       0 |       95 |        6 |        7 |        4 |        1 |       1 |
+|   1 |    29 |    2016 |        5 |       2 |       2 |       1 |       1 |     5 |     2 |        5 |       90 |        1 |     90 |     2 |     2 |        2 |       60 |        1 |     60 |       1 |       1 |        7 |        6 |        0 |        0 |        0 |       2 |
+|   2 |    55 |    2016 |        4 |       2 |       2 |       2 |       2 |     4 |     2 |        4 |        1 |        2 |     60 |     1 |     1 |        7 |        1 |        2 |     60 |       4 |       2 |        4 |        7 |        2 |        2 |        0 |       7 |
+|   1 |    33 |    2016 |        4 |       2 |       2 |       2 |       2 |     1 |     2 |        1 |       20 |        1 |     20 |     3 |     2 |        3 |       30 |        1 |     30 |       0 |       0 |       95 |        7 |        0 |        0 |        0 |       7 |
+|   1 |    68 |    2016 |        4 |       2 |       2 |       1 |       1 |     3 |     2 |        3 |       60 |        1 |     60 |     1 |     2 |        1 |        3 |        2 |    180 |       2 |       2 |        2 |        6 |        0 |        0 |        0 |       7 |
+|   2 |    30 |    2016 |        4 |       2 |       2 |       2 |       2 |     2 |     2 |        2 |       30 |        1 |     30 |     3 |     2 |        3 |       30 |        1 |     30 |       0 |       0 |       95 |        8 |        4 |        0 |        0 |       5 |
+|   2 |    23 |    2016 |        4 |       2 |       2 |       2 |       2 |     3 |     2 |        3 |        3 |        2 |    180 |     4 |     2 |        4 |        2 |        2 |    120 |       1 |       2 |        1 |        8 |        7 |        0 |        0 |       7 |
+|   1 |    30 |    2016 |        4 |       2 |       2 |       2 |       1 |     7 |     2 |        7 |        1 |        2 |     60 |     7 |     2 |        7 |        1 |        2 |     60 |       5 |       2 |        5 |        7 |        0 |        0 |        0 |       3 |
+|   1 |    18 |    2016 |        4 |       2 |       2 |       1 |       2 |     1 |     2 |        1 |       90 |        1 |     90 |     1 |     1 |        7 |       90 |        1 |     90 |       5 |       2 |        5 |        8 |        3 |        2 |        0 |       0 |
+|   2 |    23 |    2016 |        4 |       2 |       2 |       2 |       2 |     4 |     2 |        4 |       10 |        1 |     10 |     4 |     2 |        4 |       10 |        1 |     10 |       4 |       2 |        4 |        9 |        2 |        0 |        0 |       6 |
++-----+-------+---------+----------+---------+---------+---------+---------+-------+-------+----------+----------+----------+--------+-------+-------+----------+----------+----------+--------+---------+---------+----------+----------+----------+----------+----------+---------+
+```
+## 2.6 Creating Summary Tables:
+The purpose of this step is to prepare simplified, aggregated tables that focus on key metrics. These summary tables will make it easier to compare Fitbit data with NHIS benchmarks and analyze insights effectively.
+
+### 2.6.1: Weekly Physical Activity Summary Table
+In this sub-step, I created a `weekly_activity_summary` table of key physical activity metrics from the `daily_activity` dataset. The goal was to aggregate moderate and vigorous activity minutes, steps, and calories for each Fitbit user on a weekly basis. This summary will facilitate comparisons with **NHIS data** and **WHO** recommendations on physical activity.
+
+**Initial Actions for Table Setup and Data Aggregation**:
+1.	**Source Data**: This summary table is derived from the `daily_activity` dataset, where individual daily records are aggregated by user ID and week.
+2.	Create the `weekly_activity_summary` Table with Key Metrics:
+- **Total Steps**: Sum of daily steps for each week.
+- **Total Calories**: Sum of calories burned each week.
+- **Total Vigorous Minutes**: Sum of very active minutes each week.
+- **Total Moderate Minutes**: Sum of fairly active minutes each week.
+
+#### Key SQL queries used:
+1. Create the `weekly_activity_summary` Table:
+```sql
+CREATE TABLE weekly_activity_summary (
+    Id BIGINT,
+    year INT,
+    week INT,
+    total_weekly_steps INT,
+    total_weekly_calories INT,
+    total_weekly_vigorous_minutes INT,
+    total_weekly_moderate_minutes INT,
+    PRIMARY KEY (Id, year, week)
+);), WEEK(ActivityDate);
+```
+2.	Data Aggregation and Insertion:
+Insert the weekly activity data directly into this permanent table, using the same aggregation logic as before.
+```sql
+INSERT INTO weekly_activity_summary (Id, year, week, total_weekly_steps, total_weekly_calories, total_weekly_vigorous_minutes, total_weekly_moderate_minutes)
+SELECT 
+    Id,
+    YEAR(ActivityDate) AS year,
+    WEEK(ActivityDate) AS week,
+    SUM(TotalSteps) AS total_weekly_steps,
+    SUM(Calories) AS total_weekly_calories,
+    SUM(VeryActiveMinutes) AS total_weekly_vigorous_minutes,
+    SUM(FairlyActiveMinutes) AS total_weekly_moderate_minutes
+FROM 
+    daily_activity
+GROUP BY 
+    Id, YEAR(ActivityDate), WEEK(ActivityDate);
+```
+
+3. Verification of Data in weekly_activity_summary
+```sql
+DESCRIBE weekly_activity_summary;
+```
+Output: 
+```sql
+-------------------------------+--------+------+-----+---------+-------+
+| Field                         | Type   | Null | Key | Default | Extra |
++-------------------------------+--------+------+-----+---------+-------+
+| Id                            | bigint | NO   | PRI | null    |       |
+| year                          | int    | NO   | PRI | null    |       |
+| week                          | int    | NO   | PRI | null    |       |
+| total_weekly_steps            | int    | YES  |     | null    |       |
+| total_weekly_calories         | int    | YES  |     | null    |       |
+| total_weekly_vigorous_minutes | int    | YES  |     | null    |       |
+| total_weekly_moderate_minutes | int    | YES  |     | null    |       |
++-------------------------------+--------+------+-----+---------+-------+
+```
+
+4. **Sample Output Verification**: The following random samples verify that the data in the `weekly_activity_summary` table is correctly formatted:
+```sql
++------------+------+------+--------------------+-----------------------+-------------------------------+-------------------------------+
+| Id         | year | week | total_weekly_steps | total_weekly_calories | total_weekly_vigorous_minutes | total_weekly_moderate_minutes |
++------------+------+------+--------------------+-----------------------+-------------------------------+-------------------------------+
+| 2026352035 | 2016 |   16 |              31548 |                 10341 |                             0 |                             0 |
+| 2026352035 | 2016 |   15 |              27531 |                 10148 |                             3 |                             8 |
+| 2022484408 | 2016 |   19 |              51858 |                 11751 |                           166 |                           116 |
+| 2320127002 | 2016 |   17 |              19904 |                 11154 |                             3 |                             5 |
+| 7007744171 | 2016 |   18 |              59620 |                 13329 |                           219 |                            81 |
+| 4702921684 | 2016 |   15 |              57230 |                 20954 |                             5 |                            57 |
+| 8877689391 | 2016 |   18 |              92845 |                 22478 |                           389 |                            83 |
+| 4319703577 | 2016 |   18 |              61708 |                 15334 |                            52 |                           123 |
+| 5577150313 | 2016 |   17 |              64415 |                 25773 |                           775 |                           283 |
+| 6775888955 | 2016 |   15 |              15229 |                  9259 |                            67 |                            60 |
++------------+------+------+--------------------+-----------------------+-------------------------------+-------------------------------+
+```
+
+### 2.6.2: Weekly Sleep Duration Summary
+In this step, we analyzed users’ sleep patterns by aggregating weekly sleep metrics from the `sleep_day` table. This allows us to observe trends in users' sleep behaviours, such as total weekly time in bed, total weekly minutes asleep, and average daily sleep duration.
+
+#### Key SQL queries used:
+1.	**Create the `weekly_sleep_summary` Table:** We'll create a table named `weekly_sleep_summary` with columns for `Id`, `year`, `week`, `total_weekly_time_in_bed`, `total_weekly_minutes_asleep`, and `average_daily_minutes_asleep`.
+```sql
+CREATE TABLE weekly_sleep_summary (
+    Id BIGINT,
+    year INT,
+    week INT,
+    total_weekly_time_in_bed INT,
+    total_weekly_minutes_asleep INT,
+    average_daily_minutes_asleep DECIMAL(10,2),
+    PRIMARY KEY (Id, year, week)
+);
+```
+2.	**Data Aggregation and Insertion**: Now, we will populate the `weekly_sleep_summary` table by aggregating data from `sleep_day`:
+```sql
+INSERT INTO weekly_sleep_summary (Id, year, week, total_weekly_time_in_bed, total_weekly_minutes_asleep, average_daily_minutes_asleep)
+SELECT 
+    Id,
+    YEAR(SleepDay) AS year,
+    WEEK(SleepDay) AS week,
+    SUM(TotalTimeInBed) AS total_weekly_time_in_bed,
+    SUM(TotalMinutesAsleep) AS total_weekly_minutes_asleep,
+    AVG(TotalMinutesAsleep) AS average_daily_minutes_asleep
+FROM 
+    sleep_day
+GROUP BY 
+    Id, YEAR(SleepDay), WEEK(SleepDay);
+```
+3. **Sample Output Verification**: The following random samples verify that the data in the `weekly_sleep_summary` table is correctly formatted:
+```sql
++------------+------+------+--------------------------+-----------------------------+------------------------------+
+| Id         | year | week | total_weekly_time_in_bed | total_weekly_minutes_asleep | average_daily_minutes_asleep |
++------------+------+------+--------------------------+-----------------------------+------------------------------+
+| 5577150313 | 2016 |   16 |                     3286 |                        3108 |                       444.00 |
+| 4388161847 | 2016 |   18 |                     2378 |                        2248 |                       449.60 |
+| 2320127002 | 2016 |   16 |                       69 |                          61 |                        61.00 |
+| 4445114986 | 2016 |   15 |                     2233 |                        2039 |                       407.80 |
+| 2026352035 | 2016 |   15 |                     2819 |                        2626 |                       525.20 |
+| 1503960366 | 2016 |   15 |                     1562 |                        1463 |                       365.75 |
+| 4319703577 | 2016 |   16 |                     2929 |                        2783 |                       463.83 |
+| 7086361926 | 2016 |   18 |                     2644 |                        2556 |                       426.00 |
+| 2026352035 | 2016 |   19 |                     2542 |                        2408 |                       481.60 |
+| 4020332650 | 2016 |   18 |                     1524 |                        1411 |                       352.75 |
++------------+------+------+--------------------------+-----------------------------+------------------------------+
+```
+
+### 2.6.3: Weekly Heart Rate Summary
+The purpose of this step is to create a weekly summary of users’ heart rate data, focusing on their average weekly heart rates. This information will be instrumental in understanding heart rate trends over time and providing insights into user health and wellness. We calculate this summary from the `heartrate_seconds` table by averaging each user's heart rate values within each week. This dataset will later be compared to WHO and NHIS benchmarks to provide a comprehensive view of the users' cardiovascular health.
+#### Key SQL queries used:
+1.	**Create the `weekly_heart_rate_summary` Table:**
+```sql
+CREATE TABLE weekly_heart_rate_summary (
+    Id BIGINT,
+    year INT,
+    week INT,
+    average_weekly_heart_rate DECIMAL(6,3)
+);
+```
+
+2.	**Data Aggregation and Insertion**: Using the `heartrate_seconds` table, we calculated the weekly average heart rate for each user and inserted these aggregated values into the `weekly_heart_rate_summary` table. To accommodate possible high values, we set `average_weekly_heart_rate` to `DECIMAL(6,3)`.
+```sql
+INSERT INTO weekly_heart_rate_summary (Id, year, week, average_weekly_heart_rate)
+SELECT
+    Id,
+    YEAR(Time) AS year,
+    WEEK(Time) AS week,
+    ROUND(AVG(Value), 4) AS average_weekly_heart_rate
+FROM
+    heartrate_seconds
+GROUP BY
+    Id, YEAR(Time), WEEK(Time)
+ORDER BY
+    Id, year, week;
+```
+
+3.	**Duplicate Check**: Ensured there were no duplicate entries in the `weekly_heart_rate_summary` table by verifying that each user had only one average weekly heart rate per week. 
+```sql
+SELECT Id, year, week, COUNT(*)
+FROM weekly_heart_rate_summary
+GROUP BY Id, year, week
+HAVING COUNT(*) > 1;
+```
+
+4.	**Null or Missing Values Check**: Verified that there were no null values in the `Id`, `year`, `week`, or `average_weekly_heart_rate` columns.
+```sql
+SELECT 
+    COUNT(Id) AS non_null_id,
+    COUNT(year) AS non_null_year,
+    COUNT(week) AS non_null_week,
+    COUNT(average_weekly_heart_rate) AS non_null_avg_heart_rate
+FROM weekly_heart_rate_summary;
+```
+5.	**Range Validation**: Ensured that the values for average_weekly_heart_rate fell within expected physiological ranges (generally between 40 and 200 bpm for resting heart rate averages).
+```sql
+SELECT *
+FROM weekly_heart_rate_summary
+WHERE average_weekly_heart_rate < 40 OR average_weekly_heart_rate > 200;
+```
+
+6. **Sample Output Verification**: The following random samples verify that the data in the `weekly_heart_rate_summary` table is correctly formatted:
+```sql
++------------+------+------+---------------------------+
+| Id         | year | week | average_weekly_heart_rate |
++------------+------+------+---------------------------+
+| 4388161847 | 2016 |   15 |                    69.705 |
+| 8792009665 | 2016 |   18 |                    70.516 |
+| 6775888955 | 2016 |   18 |                    99.686 |
+| 2022484408 | 2016 |   16 |                    81.804 |
+| 6962181067 | 2016 |   15 |                    79.571 |
+| 6117666160 | 2016 |   16 |                    82.838 |
+| 6962181067 | 2016 |   16 |                    79.191 |
+| 5553957443 | 2016 |   17 |                    69.499 |
+| 2347167796 | 2016 |   17 |                    73.763 |
+| 4020332650 | 2016 |   16 |                    98.826 |
++------------+------+------+---------------------------+
+```
+
+## 2.7 Additional Consistency Checks:
+The purpose of this step is to perform a final round of consistency checks across all weekly summary tables (`weekly_activity_summary`, `weekly_sleep_summary`, `weekly_heart_rate_summary`, and `final_weekly_summary`). By identifying and addressing any remaining discrepancies, we ensure the reliability of the dataset used in the analysis phase.
+
+### 2.7.1: 
+1. **Check Consistent Date Ranges** - To confirm that all dates are within our defined observation period (e.g., March 12, 2016, to May 12, 2016).
+#### Key SQL queries used:
+
+- For `weekly_activity_summary`:
+```sql
+SELECT MIN(week), MAX(week), MIN(year), MAX(year)
+FROM weekly_activity_summary;
+```
+**Output**:
+```sql
++-----------+-----------+-----------+-----------+
+| MIN(week) | MAX(week) | MIN(year) | MAX(year) |
++-----------+-----------+-----------+-----------+
+|        10 |        19 |      2016 |      2016 |
++-----------+-----------+-----------+-----------+
+```
+- For `weekly_sleep_summary`:
+```sql
+SELECT MIN(week), MAX(week), MIN(year), MAX(year)
+FROM weekly_sleep_summary;
+```
+**Output**:
+```sql
++-----------+-----------+-----------+-----------+
+| MIN(week) | MAX(week) | MIN(year) | MAX(year) |
++-----------+-----------+-----------+-----------+
+|        15 |        19 |      2016 |      2016 |
++-----------+-----------+-----------+-----------+
+```
+For `weekly_heart_rate_summary`:
+```sql
+SELECT MIN(week), MAX(week), MIN(year), MAX(year)
+FROM weekly_heart_rate_summary;
+```
+**Output**:
+```sql
++-----------+-----------+-----------+-----------+
+| MIN(week) | MAX(week) | MIN(year) | MAX(year) |
++-----------+-----------+-----------+-----------+
+|        13 |        19 |      2016 |      2016 |
++-----------+-----------+-----------+-----------+
+```
+
+*Note: The date ranges for each table appear to vary slightly, with `weekly_activity_summary` starting from week 10, `weekly_heart_rate_summary` starting from week 13, and `weekly_sleep_summary` starting from week 15. This discrepancy might be due to missing or incomplete data for certain weeks in the source tables. Here’s how we’ll address this by filtering the tables to a common observation window (Weeks 15-19, 2016)*
+```sql
+DELETE FROM weekly_activity_summary
+WHERE week < 15 OR week > 19;
+
+DELETE FROM weekly_sleep_summary
+WHERE week < 15 OR week > 19;
+
+DELETE FROM weekly_heart_rate_summary
+WHERE week < 15 OR week > 19;
+```
+2. **Verify Consistency of User IDs Across Tables:** - Identify any user IDs that might be missing from one or more of the tables within the specified weeks.
+(*Note: This step will filter down the Fitbit user sample size from 30 users to 12 users. However, this is an intended approach to ensure that comparative study between Fitbit, NHIS and WHO data are cohesive*)
+#### Key SQL queries used:
+- Find User IDs Missing in `weekly_activity_summary`, `weekly_sleep_summary` and `weekly_heart_rate_summary`:
+```sql
+SELECT DISTINCT ws.Id
+FROM weekly_sleep_summary ws
+LEFT JOIN weekly_activity_summary wa ON ws.Id = wa.Id AND ws.week = wa.week
+WHERE wa.Id IS NULL;
+```
+**Output**:
+```sql
+0 records retrieved
+```
+
+```sql
+SELECT DISTINCT wa.Id
+FROM weekly_activity_summary wa
+LEFT JOIN weekly_sleep_summary ws ON wa.Id = ws.Id AND wa.week = ws.week
+WHERE ws.Id IS NULL;
+```
+**Output**:
+```sql
++------------+
+| Id         |
++------------+
+| 1624580081 |
+| 1644430081 |
+| 1844505072 |
+| 1927972279 |
+| 2022484408 |
+| 2320127002 |
+| 2873212765 |
+| 3372868164 |
+| 4020332650 |
+| 4057192912 |
+| 4558609924 |
+| 6290855005 |
+| 6775888955 |
+| 7007744171 |
+| 8053475328 |
+| 8253242879 |
+| 8583815059 |
+| 8877689391 |
++------------+
+```
+
+```sql
+SELECT DISTINCT wa.Id
+FROM weekly_activity_summary wa
+LEFT JOIN weekly_heart_rate_summary wh ON wa.Id = wh.Id AND wa.week = wh.week
+WHERE wh.Id IS NULL;
+```
+**Output**:
+```sql
++------------+
+| Id         |
++------------+
+| 1503960366 |
+| 1624580081 |
+| 1644430081 |
+| 1844505072 |
+| 1927972279 |
+| 2026352035 |
+| 2320127002 |
+| 2873212765 |
+| 3372868164 |
+| 3977333714 |
+| 4057192912 |
+| 4319703577 |
+| 4445114986 |
+| 4702921684 |
+| 6290855005 |
+| 7086361926 |
+| 8053475328 |
+| 8253242879 |
+| 8378563200 |
+| 8583815059 |
++------------+
+```
+**Inference**:
+This shows that there are several user IDs present in the `weekly_activity_summary` table that are missing from the other two tables:
+- Missing from `weekly_sleep_summary`: **18** user IDs
+- Missing from `weekly_heart_rate_summary`: **20** user IDs
+
+This inconsistency will affect our analysis because we need a full dataset for each user across all metrics. Here’s the plan to handle this:
+
+1. **Filter Out Inconsistent User IDs:**
+We’ll create a final consolidated table that only includes user IDs present in all three summary tables for weeks 15 to 19. For this, first, we’ll find user IDs that are consistently represented across all three tables within weeks 15 to 19. 
+```sql
+SELECT DISTINCT wa.Id
+FROM weekly_activity_summary wa
+JOIN weekly_sleep_summary ws ON wa.Id = ws.Id AND wa.week = ws.week
+JOIN weekly_heart_rate_summary wh ON wa.Id = wh.Id AND wa.week = wh.week
+WHERE wa.week BETWEEN 15 AND 19;
+```
+**Output**: We now have a list of 12 user IDs with complete data across all three summary tables for weeks 15 to 19.
+```sql
++------------+
+| Id         |
++------------+
+| 2026352035 |
+| 2347167796 |
+| 4020332650 |
+| 4388161847 |
+| 4558609924 |
+| 5553957443 |
+| 5577150313 |
+| 6117666160 |
+| 6775888955 |
+| 6962181067 |
+| 7007744171 |
+| 8792009665 |
++------------+
+```
+
+2. **Create a Unified View or Final Summary Table:**
+We’ll generate a new table called `final_weekly_summary` that will consolidate the relevant weekly metrics for these user IDs. This table will include:
+- `Id`: User ID
+- `year`: Year (2016)
+- `week`: Week number (15 to 19)
+- `total_weekly_steps`: Total steps for the week
+- `total_weekly_calories`: Total calories for the week
+- `total_weekly_vigorous_minutes`: Total vigorous activity minutes for the week
+- `total_weekly_moderate_minutes`: Total moderate activity minutes for the week
+- `total_weekly_time_in_bed`: Total time in bed for the week
+- `total_weekly_minutes_asleep`: Total minutes asleep for the week
+- `average_daily_minutes_asleep`: Average daily minutes asleep for the week
+- `average_weekly_heart_rate`: Average heart rate for the week
+
+#### Key SQL queries used for this:
+- **Create the `final_weekly_summary ` Table**
+```sql
+CREATE TABLE final_weekly_summary (
+    Id BIGINT,
+    year INT,
+    week INT,
+    total_weekly_steps INT,
+    total_weekly_calories INT,
+    total_weekly_vigorous_minutes INT,
+    total_weekly_moderate_minutes INT,
+    total_weekly_time_in_bed INT,
+    total_weekly_minutes_asleep INT,
+    average_daily_minutes_asleep FLOAT,
+    average_weekly_heart_rate FLOAT
+);
+```
+- **Insert Data into the Table** - Insert data for the 12 users across weeks 15 to 19
+```sql
+INSERT INTO final_weekly_summary (Id, year, week, total_weekly_steps, total_weekly_calories, total_weekly_vigorous_minutes, total_weekly_moderate_minutes, total_weekly_time_in_bed, total_weekly_minutes_asleep, average_daily_minutes_asleep, average_weekly_heart_rate)
+SELECT 
+    wa.Id,
+    wa.year,
+    wa.week,
+    wa.total_weekly_steps,
+    wa.total_weekly_calories,
+    wa.total_weekly_vigorous_minutes,
+    wa.total_weekly_moderate_minutes,
+    ws.total_weekly_time_in_bed,
+    ws.total_weekly_minutes_asleep,
+    ws.average_daily_minutes_asleep,
+    wh.average_weekly_heart_rate
+FROM 
+    weekly_activity_summary wa
+JOIN 
+    weekly_sleep_summary ws ON wa.Id = ws.Id AND wa.week = ws.week
+JOIN 
+    weekly_heart_rate_summary wh ON wa.Id = wh.Id AND wa.week = wh.week
+WHERE 
+    wa.Id IN (2026352035, 2347167796, 4020332650, 4388161847, 4558609924, 5553957443, 5577150313, 6117666160, 6775888955, 6962181067, 7007744171, 8792009665)
+    AND wa.week BETWEEN 15 AND 19;
+```
+
+- **Verification of `final_weekly_summary` Table** -
+```sql
++------------+------+------+--------------------+-----------------------+-------------------------------+-------------------------------+--------------------------+-----------------------------+------------------------------+---------------------------+
+| Id         | year | week | total_weekly_steps | total_weekly_calories | total_weekly_vigorous_minutes | total_weekly_moderate_minutes | total_weekly_time_in_bed | total_weekly_minutes_asleep | average_daily_minutes_asleep | average_weekly_heart_rate |
++------------+------+------+--------------------+-----------------------+-------------------------------+-------------------------------+--------------------------+-----------------------------+------------------------------+---------------------------+
+| 2026352035 | 2016 |   16 |              31548 |                 10341 |                             0 |                             0 |                     3161 |                        2915 |                       485.83 |                    68.656 |
+| 2026352035 | 2016 |   17 |              40236 |                 11012 |                             0 |                             0 |                     3329 |                        3145 |                       524.17 |                    99.506 |
+| 2026352035 | 2016 |   18 |              47741 |                 11552 |                             0 |                             0 |                     3203 |                        3079 |                       513.17 |                    84.135 |
+| 2026352035 | 2016 |   19 |              33938 |                  7627 |                             0 |                             0 |                     2542 |                        2408 |                        481.6 |                    98.234 |
+| 2347167796 | 2016 |   15 |              83382 |                 15368 |                           132 |                           244 |                     1524 |                        1364 |                       454.67 |                    79.442 |
+| 2347167796 | 2016 |   16 |              66214 |                 14993 |                            87 |                           161 |                     3004 |                        2760 |                          460 |                    76.278 |
+| 2347167796 | 2016 |   17 |              41837 |                 10594 |                            41 |                            20 |                     2842 |                        2578 |                       429.67 |                    73.763 |
+| 4020332650 | 2016 |   15 |              20633 |                 16991 |                           110 |                            61 |                      618 |                         578 |                          289 |                     84.56 |
+| 4020332650 | 2016 |   18 |              37452 |                 18022 |                            51 |                            99 |                     1524 |                        1411 |                       352.75 |                    81.893 |
+| 4020332650 | 2016 |   19 |              20243 |                 12565 |                             5 |                            13 |                      896 |                         806 |                          403 |                    79.221 |
+| 4388161847 | 2016 |   15 |              45316 |                 15184 |                            17 |                            58 |                      974 |                         925 |                        462.5 |                    69.705 |
+| 4388161847 | 2016 |   16 |              71833 |                 21863 |                           208 |                           108 |                     2578 |                        2470 |                       352.86 |                    68.658 |
+| 4388161847 | 2016 |   17 |              75697 |                 21407 |                            96 |                           178 |                     2329 |                        2147 |                        429.4 |                    63.738 |
+| 4388161847 | 2016 |   18 |              91001 |                 22871 |                           263 |                           198 |                     2378 |                        2248 |                        449.6 |                    64.499 |
+| 4388161847 | 2016 |   19 |              51385 |                 14585 |                           134 |                            89 |                     1475 |                        1414 |                        353.5 |                    65.296 |
+| 4558609924 | 2016 |   16 |              59012 |                 14562 |                            53 |                            94 |                      137 |                         126 |                          126 |                    82.787 |
+| 4558609924 | 2016 |   17 |              62966 |                 14927 |                            80 |                           134 |                      300 |                         274 |                          137 |                    83.879 |
+| 4558609924 | 2016 |   18 |              44421 |                 13510 |                            58 |                            34 |                      129 |                         115 |                          115 |                    77.473 |
+| 4558609924 | 2016 |   19 |              39844 |                 10361 |                            87 |                           114 |                      134 |                         123 |                          123 |                     81.79 |
+| 5553957443 | 2016 |   15 |              73277 |                 13930 |                           174 |                           144 |                     2465 |                        2281 |                        456.2 |                    67.122 |
+| 5553957443 | 2016 |   16 |              50717 |                 12881 |                           141 |                            86 |                     3540 |                        3237 |                       462.43 |                    68.335 |
+| 5553957443 | 2016 |   17 |              60536 |                 13186 |                           202 |                            73 |                     3747 |                        3391 |                       484.43 |                    69.499 |
+| 5553957443 | 2016 |   18 |              57861 |                 13123 |                           114 |                            76 |                     3424 |                        3119 |                       445.57 |                    67.355 |
+| 5553957443 | 2016 |   19 |              42099 |                  8803 |                           131 |                            76 |                     2506 |                        2340 |                          468 |                    71.293 |
+| 5577150313 | 2016 |   15 |              60802 |                 23146 |                           637 |                           219 |                     2251 |                        2126 |                        425.2 |                    69.553 |
+| 5577150313 | 2016 |   16 |              70668 |                 25369 |                           705 |                           236 |                     3286 |                        3108 |                          444 |                    68.889 |
+| 5577150313 | 2016 |   17 |              64415 |                 25773 |                           775 |                           283 |                     3195 |                        2974 |                       424.86 |                    68.586 |
+| 5577150313 | 2016 |   18 |              49558 |                 19757 |                           439 |                           146 |                     2206 |                        2089 |                        417.8 |                    68.963 |
+| 5577150313 | 2016 |   19 |              16328 |                  7995 |                           183 |                            63 |                     1038 |                         935 |                        467.5 |                    71.864 |
+| 6117666160 | 2016 |   15 |              28469 |                  5693 |                             7 |                            21 |                      398 |                         380 |                          380 |                    90.954 |
+| 6117666160 | 2016 |   16 |              73130 |                 19345 |                            37 |                            29 |                     3489 |                        3248 |                          464 |                    82.838 |
+| 6117666160 | 2016 |   17 |              46559 |                 14045 |                             0 |                             7 |                     1976 |                        1888 |                          472 |                    83.875 |
+| 6117666160 | 2016 |   18 |              37345 |                 13250 |                             0 |                             0 |                     2195 |                        2055 |                       513.75 |                    83.588 |
+| 6117666160 | 2016 |   19 |              11805 |                  3498 |                             0 |                             0 |                     1125 |                        1047 |                        523.5 |                    79.502 |
+| 6775888955 | 2016 |   15 |              15229 |                  9259 |                            67 |                            60 |                     1107 |                        1049 |                       349.67 |                    81.814 |
+| 6962181067 | 2016 |   15 |              58692 |                 13395 |                           148 |                            86 |                     2353 |                        2231 |                        446.2 |                    79.571 |
+| 6962181067 | 2016 |   16 |              88810 |                 15122 |                           242 |                           201 |                     3301 |                        3167 |                       452.43 |                    79.191 |
+| 6962181067 | 2016 |   17 |              72491 |                 14383 |                           160 |                           115 |                     3166 |                        3102 |                       443.14 |                    76.619 |
+| 6962181067 | 2016 |   18 |              63869 |                 13923 |                            68 |                           133 |                     3068 |                        2921 |                       417.29 |                    76.327 |
+| 6962181067 | 2016 |   19 |              42287 |                  8908 |                           129 |                            84 |                     2562 |                        2467 |                        493.4 |                    78.527 |
+| 7007744171 | 2016 |   15 |              70431 |                 18092 |                           162 |                            75 |                       82 |                          79 |                           79 |                    90.374 |
+| 7007744171 | 2016 |   18 |              59620 |                 13329 |                           219 |                            81 |                       61 |                          58 |                           58 |                    89.844 |
+| 8792009665 | 2016 |   15 |              12613 |                 13649 |                             0 |                             0 |                     1925 |                        1838 |                        459.5 |                    70.845 |
+| 8792009665 | 2016 |   16 |              12604 |                  9075 |                             9 |                            75 |                     1314 |                        1258 |                       419.33 |                    72.842 |
+| 8792009665 | 2016 |   17 |              25170 |                 14571 |                            19 |                            42 |                     1610 |                        1566 |                        391.5 |                    76.147 |
+| 8792009665 | 2016 |   18 |               8154 |                  8341 |                             0 |                             0 |                     1958 |                        1873 |                       468.25 |                    70.516 |
++------------+------+------+--------------------+-----------------------+-------------------------------+-------------------------------+--------------------------+-----------------------------+------------------------------+---------------------------+
 ```
