@@ -1329,3 +1329,45 @@ WHERE
 | 8792009665 | 2016 |   18 |               8154 |                  8341 |                             0 |                             0 |                     1958 |                        1873 |                       468.25 |                    70.516 |
 +------------+------+------+--------------------+-----------------------+-------------------------------+-------------------------------+--------------------------+-----------------------------+------------------------------+---------------------------+
 ```
+
+## 2.8 Integrate WHO Baseline Recommendations:
+The aim of this step is to incorporate WHO-recommended baseline metrics into our dataset for meaningful comparison. This will allow us to evaluate users' weekly activity and sleep data against globally recognized health standards. Specifically, we’ll focus on recommended activity and sleep levels, enabling a direct assessment of each user's adherence to these standards.
+
+**WHO Baseline Metrics**
+Based on WHO guidelines, we’re establishing the following baselines for each key metric:
+•	P**hysical Activity**: Adults should engage in at least **150 minutes** of moderate activity or **75 minutes** of vigorous activity per week or an equivalent combination.
+•	**Sleep Duration**: Adults should aim for **7-8 hours** of sleep per night, translating to a total of **49-56 hours** (or **2940-3360 minutes**) per week.
+These baselines will serve as reference points in the Analyze phase, where we will assess whether users are meeting or falling short of these recommended thresholds.
+
+#### Key SQL queries used:
+**Add WHO Baseline Fields**: Added two new columns to the `final_weekly_summary` table to hold the **WHO** baselines:
+- `who_baseline_activity_minutes` with a value of **150** for moderate or **75** for vigorous activity minutes.
+- `who_baseline_sleep_minutes` with a value range of **2940–3360** minutes per week.
+```sql
+ALTER TABLE final_weekly_summary 
+ADD COLUMN who_baseline_activity_minutes INT DEFAULT 150, 
+ADD COLUMN who_baseline_sleep_minutes INT DEFAULT 2940;
+```
+
+## 2.9 Integrate NHIS Baseline Averages as Benchmarks:
+Use the NHIS averages (vigorous minutes, moderate minutes, and sleep duration) as benchmarks to compare against the Fitbit weekly summaries for activity and sleep. This will allow us to assess how Fitbit users’ activity and sleep metrics align with or differ from national averages.
+```sql
+CREATE VIEW nhis_2016_summary AS
+SELECT 
+   AVG(VIGMIN * VIGFREQW) AS avg_nhis_vigorous_minutes,
+   AVG(MODMIN * MODFREQW) AS avg_nhis_moderate_minutes,
+   AVG(ASISLEEP * 60) AS avg_nhis_sleep_duration_minutes  
+FROM 
+   nhis_2016_data;
+```
+```sql
++---------------------------+---------------------------+---------------------------------+
+| avg_nhis_vigorous_minutes | avg_nhis_moderate_minutes | avg_nhis_sleep_duration_minutes |
++---------------------------+---------------------------+---------------------------------+
+|                  201.0707 |                  235.7518 |                        418.8351 |
++---------------------------+---------------------------+---------------------------------+
+```
+**Reasoning for this:**
+•	The NHIS benchmarks provide a practical and reliable reference for analyzing user fitness and wellness metrics, as they represent national averages for similar metrics.
+•	WHO guidelines are often broader, whereas NHIS provides actual observed data that aligns well with the specifics of the dataset we’re analyzing.
+
