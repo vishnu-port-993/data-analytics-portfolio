@@ -425,4 +425,18 @@ To ensure data integrity and quality, each table was subjected to the following 
 8.	**Descriptive Statistics Review**: Basic statistics were calculated for numeric columns to identify any anomalies or data inconsistencies.
 9.	**Overall Data Integrity Check**: A general check was conducted to ensure logical coherence across values.
 
+## 2.1 Processing and cleaning daily_activity table:
+Following the import, I conducted several data cleaning steps as per the Data Cleaning Overview, including handling duplicates, standardizing date formats, ensuring valid numeric data, and removing null values.
 
+### 2.1.1 Key SQL queries used for cleaning:
+1.	**Identify Duplicates**: I checked for duplicate records based on Id and ActivityDate to avoid redundancy.
+```sql
+SELECT
+    Id, 
+    ActivityDate,
+    COUNT(*)
+FROM daily_activity
+GROUP BY 
+    Id, ActivityDate
+HAVING COUNT(*) > 1;
+```
