@@ -459,8 +459,7 @@ SELECT
     COUNT(DISTINCT Id) AS unique_users
 FROM daily_activity;
 ```
-4. Sample Output Verification:
-Below is a sample output from the `daily_activity` table to confirm the imported data and ensure it falls within the specified timeframe.
+4. **Sample Output Verification**: Below is a sample output from the `daily_activity` table to confirm the imported data and ensure it falls within the specified timeframe.
 ```sql
 +------------+--------------+------------+---------------+-----------------+--------------------------+--------------------+--------------------------+---------------------+-------------------------+-------------------+---------------------+----------------------+------------------+----------+
 | Id         | ActivityDate | TotalSteps | TotalDistance | TrackerDistance | LoggedActivitiesDistance | VeryActiveDistance | ModeratelyActiveDistance | LightActiveDistance | SedentaryActiveDistance | VeryActiveMinutes | FairlyActiveMinutes | LightlyActiveMinutes | SedentaryMinutes | Calories |
@@ -481,7 +480,7 @@ Below is a sample output from the `daily_activity` table to confirm the imported
 ## 2.2 Processing and cleaning `heartrate_seconds` table:
 After importing the data, I conducted multiple cleaning and validation steps to ensure the integrity of the heart rate data.
 
-### 2.1.1 Key SQL queries used for cleaning:
+### 2.2.1 Key SQL queries used for cleaning:
 1.	**Identify and Remove Duplicates**: Due to overlapping dates across the two folders, there were potential duplicates for the same Id and Time. I retained the record with the higher Value in cases where duplicates were found.
 ```sql
 SELECT Id, Time, COUNT(*)
@@ -510,7 +509,7 @@ SELECT
     COUNT(DISTINCT Id) AS unique_users
 FROM heartrate_seconds;
 ```
-4. Sample Output Verification: The following sample output from `heartrate_seconds` shows random records to verify the data import and timeframe filtering.
+4. **Sample Output Verification**: The following sample output from `heartrate_seconds` shows random records to verify the data import and timeframe filtering.
 ```sql
 +------------+---------------------+-------+
 | Id         | Time                | Value |
@@ -526,4 +525,70 @@ FROM heartrate_seconds;
 | 4558609924 | 2016-04-10 18:16:55 |    83 |
 | 4020332650 | 2016-05-05 22:11:55 |    95 |
 +------------+---------------------+-------+
+```
+## 2.3 Processing and cleaning `sleep_day` table:
+
+### 2.3.1 Key SQL queries used for cleaning:
+1.	**Identify and Remove Duplicates**: I identified duplicate records where the same Id and SleepDay occurred more than once. For simplicity, I retained only the earliest entry by creating a temporary temp_id column, which I used to differentiate and delete duplicate rows.
+```sql
+SELECT Id, SleepDay, COUNT(*)
+FROM sleep_day
+GROUP BY Id, SleepDay
+HAVING COUNT(*) > 1;
+
+ALTER TABLE sleep_day ADD COLUMN temp_id INT AUTO_INCREMENT PRIMARY KEY;
+DELETE FROM sleep_day
+WHERE temp_id NOT IN (
+    SELECT MIN(temp_id)
+    FROM (SELECT * FROM sleep_day) AS subquery
+    GROUP BY Id, SleepDay
+);
+
+ALTER TABLE sleep_day DROP COLUMN temp_id;
+```
+2.	**Check for Null Values in Key Columns**: I validated that all key columns (`TotalSleepRecords`, `TotalMinutesAsleep`, `TotalTimeInBed`) contained no null values to ensure data completeness.
+```sql
+SELECT 
+    COUNT(*) AS total_rows,
+    COUNT(TotalSleepRecords) AS non_null_records,
+    COUNT(TotalMinutesAsleep) AS non_null_minutes_asleep,
+    COUNT(TotalTimeInBed) AS non_null_time_in_bed
+FROM sleep_day;
+```
+
+3.	**Data Integrity Checks**: I conducted additional checks to verify the data's consistency, including confirming the date range, checking the number of unique users, and calculating basic descriptive statistics for sleep metrics.
+```sql
+SELECT 
+    COUNT(*) AS total_rows,
+    COUNT(TotalSleepRecords) AS non_null_records,
+    COUNT(TotalMinutesAsleep) AS non_null_minutes_asleep,
+    COUNT(TotalTimeInBed) AS non_null_time_in_bed
+FROM sleep_day;
+
+SELECT 
+    MIN(TotalMinutesAsleep) AS min_minutes_asleep,
+    MAX(TotalMinutesAsleep) AS max_minutes_asleep,
+    AVG(TotalMinutesAsleep) AS avg_minutes_asleep,
+    MIN(TotalTimeInBed) AS min_time_in_bed,
+    MAX(TotalTimeInBed) AS max_time_in_bed,
+    AVG(TotalTimeInBed) AS avg_time_in_bed
+FROM sleep_day;
+```
+
+4.	**Sample Output Verification**: Below is a sample output from the `sleep_day` table to confirm the imported data and ensure it falls within the specified timeframe.
+```sql
++------------+---------------------+-------------------+--------------------+----------------+
+| Id         | SleepDay            | TotalSleepRecords | TotalMinutesAsleep | TotalTimeInBed |
++------------+---------------------+-------------------+--------------------+----------------+
+| 2026352035 | 2016-04-23 00:00:00 |                 1 |                522 |            554 |
+| 4702921684 | 2016-04-27 00:00:00 |                 1 |                432 |            449 |
+| 1503960366 | 2016-04-16 00:00:00 |                 2 |                340 |            367 |
+| 4445114986 | 2016-04-13 00:00:00 |                 2 |                370 |            406 |
+| 4319703577 | 2016-05-10 00:00:00 |                 1 |                487 |            517 |
+| 5577150313 | 2016-04-20 00:00:00 |                 1 |                447 |            480 |
+| 4445114986 | 2016-05-06 00:00:00 |                 2 |                374 |            402 |
+| 4020332650 | 2016-04-12 00:00:00 |                 1 |                501 |            541 |
+| 1503960366 | 2016-05-05 00:00:00 |                 1 |                247 |            264 |
+| 6962181067 | 2016-05-09 00:00:00 |                 1 |                489 |            497 |
++------------+---------------------+-------------------+--------------------+----------------+
 ```
