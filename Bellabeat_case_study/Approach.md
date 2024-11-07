@@ -1656,4 +1656,19 @@ In addition to **NHIS** benchmarks, **WHO** recommendations were incorporated as
 # 1. SHARE PHASE - Visualizing and Analyzing Key Metrics
 In the Share phase of our **Bellabeat** case study, we focused on visualizing key health metrics derived from the **Fitbit** dataset. These visualizations provide insights into users' activity levels, sleep patterns, and heart rate trends, which are crucial for understanding user behavior and informing product development strategies. Below is a detailed analysis of the four key visualizations created during this phase.
 
-```r
+## Share Phase
+
+## Share Phase
+
+In the Share Phase, we used R to create visualizations that highlight key insights from the Bellabeat data. The visualizations include analyses of user activity, sleep patterns, and heart rate trends. These visualizations help to clearly communicate the findings and recommendations derived from the data.
+
+For the complete R code used in the analysis and to view all visualizations, please refer to the [Bellabeat_Viz.Rmd file](./Bellabeat_Viz.Rmd).
+
+### Key Visualizations and Insights:
+1. **Average Daily Steps per User**: A bar chart illustrating average daily steps per user, which helped identify general activity levels.
+2. **Sleep Duration Comparison with NHIS Baseline**: A bar plot comparing users’ sleep duration to the NHIS-recommended baseline, revealing trends in sleep patterns.
+3. **Heart Rate Analysis for Stress Indicators**: A line plot displaying weekly heart rate patterns to identify possible stress indicators.
+
+These visualizations support Bellabeat's understanding of user wellness behaviors and provide insights for enhancing engagement and health outcomes in their product.
+
+
