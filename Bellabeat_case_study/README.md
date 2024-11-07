@@ -1,5 +1,7 @@
 # Bellabeat Case Study
 
+[View the detailed project approach here](./Approach.md), covering each phase of the analysis process from Ask to Act.
+
 ## Executive Summary
 This project analyzes users' activity, sleep, and heart rate data to inform strategic recommendations for Bellabeat’s wellness platform. The analysis identifies trends in user health behaviors and suggests targeted interventions to enhance user engagement and health outcomes.
 
@@ -7,7 +9,7 @@ This project analyzes users' activity, sleep, and heart rate data to inform stra
 - **Methodology**: Data analysis was conducted using SQL and R, comparing user metrics to industry benchmarks from NHIS and WHO.
 
 ## Objectives
-- **Primary Goal**: Understand user behavior and health patterns to provide insights for Bellabeat’s wellness interventions.
+- **Primary Goal**: Understand user behaviour and health patterns to provide insights for Bellabeat’s wellness interventions.
 - **Sub-Objectives**:
   - Examine users’ weekly activity, sleep duration, and heart rate data to uncover trends.
   - Compare user metrics to NHIS and WHO standards to highlight areas for improvement.
