@@ -228,6 +228,14 @@ IGNORE 1 ROWS
 (Id, @ActivityHour, Calories)
 SET ActivityHour = STR_TO_DATE(@ActivityHour, '%m/%d/%Y %h:%i:%s %p');
 ```
+```sql
+-- Ensuring that all records for this import fall within the observation time frame (2016-03-12 to 2016-04-11)
+DELETE FROM hourly_steps
+WHERE ActivityHour NOT BETWEEN '2016-03-12 00:00:00' AND '2016-04-11 23:59:59';
+
+DELETE FROM hourly_calories
+WHERE ActivityHour NOT BETWEEN '2016-03-12 00:00:00' AND '2016-04-11 23:59:59';
+```
 
 ```sql
 -- Import hourlySteps_merged.csv and hourlyCalories_merged.csv for timeframe, but for the time frame 4.12.16-5.12.16 into the same table "hourly_steps" and "hourly_calories" respectively which will merge both the CSV files into one table each.
@@ -250,14 +258,7 @@ IGNORE 1 ROWS
 SET ActivityHour = STR_TO_DATE(@ActivityHour, '%m/%d/%Y %h:%i:%s %p');
 ```
 
-```sql
--- Ensuring that all records for this import fall within the observation time frame (2016-03-12 to 2016-04-11)
-DELETE FROM hourly_steps
-WHERE ActivityHour NOT BETWEEN '2016-03-12 00:00:00' AND '2016-04-11 23:59:59';
 
-DELETE FROM hourly_calories
-WHERE ActivityHour NOT BETWEEN '2016-03-12 00:00:00' AND '2016-04-11 23:59:59';
-```
 
 ```sql
 -- Ensuring that all records for this import fall within the overall observation time frame (2016-03-12 to 2016-05-12)
@@ -269,21 +270,72 @@ WHERE ActivityHour NOT BETWEEN '2016-03-12 00:00:00' AND '2016-05-12 23:59:59';
 ```
 
 
+#### 1.4 Hourly Activity Data Setup and Import (including a bit of initial time frame cleaning):
+In this step, I created the `minute_sleep` table to store detailed minute-by-minute sleep data from the *minuteSleep_merged.csv* files. These files, located in both the **Fitabase Data 3.12.16-4.11.16** and **Fitabase Data 4.12.16-5.12.16** folders, provide a high-resolution view of users’ sleep patterns, logging minute-level sleep statuses across the observation timeframe.
+
+The table was structured with columns for user ID, timestamp, sleep value (indicating sleep state), and a unique log identifier. Additionally, for analysis convenience, the timestamp was split into separate date and time columns.
 
 
+##### **SQL QUERIES:**
+Create and import data set to table `minute_sleep`:
+```sql
+CREATE TABLE minute_sleep (
+    Id BIGINT,
+    Date TIMESTAMP,
+    Value INT,
+    LogId BIGINT
+);
+```
 
+```sql
+-- Import minuteSleep_merged.csv for time frame 3.12.16-4.11.16 into table "minute_sleep".
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Fitabase Data 3.12.16-4.11.16/minuteSleep_merged.csv'
+INTO TABLE minute_sleep
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Id, @Date, Value, LogId)
+SET Date = STR_TO_DATE(@Date, '%m/%d/%Y %h:%i:%s %p');
+```
 
+```sql
+-- Ensuring that all records for this import fall within the observation time frame (2016-03-12 to 2016-04-11)
+DELETE FROM minute_sleep
+WHERE Date NOT BETWEEN '2016-03-12 00:00:00' AND '2016-04-11 23:59:59';
+```
 
+```sql
+-- Import minuteSleep_merged.csv for timeframe, but for the time frame 4.12.16-5.12.16 into the same table "minute_sleep" which will merge both the CSV files into one table each.
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Fitabase Data 4.12.16-5.12.16/minuteSleep_merged.csv'
+INTO TABLE minute_sleep
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Id, @Date, Value, LogId)
+SET Date = STR_TO_DATE(@Date, '%m/%d/%Y %h:%i:%s %p');
+```
 
+```sql
+-- Ensuring that all records for this import fall within the overall observation time frame (2016-03-12 to 2016-05-12)
+DELETE FROM minute_sleep
+WHERE Date NOT BETWEEN '2016-03-12 00:00:00' AND '2016-05-12 23:59:59';
+```
 
+```sql
+-- Splitting the Date column into Date and Time for better hold over the data set.
+ALTER TABLE minute_sleep 
+ADD COLUMN date_only DATE, 
+ADD COLUMN time_only TIME;
 
-
-
-
-
-
-
-
+UPDATE minute_sleep
+SET 
+    date_only = DATE(Date),
+    time_only = TIME(Date);
+    
+ALTER TABLE minute_sleep DROP COLUMN Date;
+```
 
 ### 2. CDC’s 2016 National Health Interview Survey (NHIS):
 This dataset provides national health data for the U.S. adult population, collected and standardized by the CDC. The NHIS dataset includes:
