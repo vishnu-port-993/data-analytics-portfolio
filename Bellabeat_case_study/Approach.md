@@ -45,6 +45,20 @@ This dataset includes detailed activity and health metrics for users who consent
     -	Owners: Furberg, R., Brinton, J., Keating, M., & Ortiz, A. (2016). Crowd-sourced Fitbit datasets 03.12.2016-05.12.2016 [Data set]. Zenodo. https://doi.org/10.5281/zenodo.53894
     -	Privacy considerations are detailed in Furberg et al. (2017) [https://link.springer.com/article/10.1007/s00779-017-1068-3].
 
+#### Daily Activity Data Setup and Import (including a bit of initial time frame cleaning):
+In this step, I created the ``*daily_activity*`` table to store daily activity data from the *dailyActivity_merged.csv* files. These files were available in both **Fitabase Data 3.12.16-4.11.16** and **Fitabase Data 4.12.16-5.12.16** folders, containing user activity metrics like steps, distance, and calories for each day.
+
+The ``*daily_activity*`` table was structured with columns for user ID, activity date, total steps, distance metrics, various activity intensities, active minutes, sedentary minutes, and calories burned. I used ``STR_TO_DATE`` to format the date consistently during import, ensuring accurate date-based queries.
+
+
+
+
+
+
+
+
+  
+
 ### 2. CDC’s 2016 National Health Interview Survey (NHIS):
 This dataset provides national health data for the U.S. adult population, collected and standardized by the CDC. The NHIS dataset includes:
 -	**Physical Activity**: Self-reported duration of moderate and vigorous activity, as well as indicators of whether individuals meet aerobic and strength guidelines.
